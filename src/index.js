@@ -1,18 +1,61 @@
 import './style.css';
 
-const  toDoListItemFactory = (taskName, priority, dueDate, description) => {
-    return {taskName, priority, dueDate, description};
-};
+// MODEL CONTROLLER
+const model = (() => {
+    // Constructor for Project objects
+    const projectFactory = (projectName) => {
+        const listItems = [];
+        return { listItems, projectName }
+    }
 
-const toDoItem1 = toDoListItemFactory('Sleep', 'low', 'test', 'Nappys');
-const toDoItem2 = toDoListItemFactory('Code', 'high', 'test', 'Code');
-const toDoItem3 = toDoListItemFactory('Eat', 'medium', 'test', 'Eat food');
-const project1 = [toDoItem1, toDoItem2, toDoItem3];
+    // Default project object
+    const defaultProject = projectFactory('default');
 
+    // Constructor for List objects
+    const todoFactory = (id, taskName, priority, dueDate, description) => {
+        return { id, taskName, priority, dueDate, description };
+    }
+
+    // Add todo
+    const addTodo = function (project = defaultProject, taskName, priority, dueDate = '', description) {
+        const todo = todoFactory(project.listItems.length, taskName, priority, dueDate, description);
+        project.listItems.push(todo);
+    }
+
+    // Edit todo
+    const editTodo = function (project = defaultProject, id, newName, newPrio, newDate, newDesc) {
+        // Finds todo with correct id and edits values
+        project.listItems.map((todo) => {
+            if (todo.id === id) {
+            if (newName != undefined) { todo.taskName = newName }
+            if (newPrio != undefined) { todo.priority = newPrio }
+            if (newDate != undefined) { todo.dueDate = newDate }
+            if (newDesc != undefined) { todo.description = newDesc }
+            }
+            return todo;
+        })
+    }
+
+    // Delete todo
+    const deleteTodo = function (project = defaultProject, id) {
+        // Finds todo with correct id and deletes it
+        const index = project.listItems.findIndex(todo => todo.id === id);
+        if (index > -1) { project.listItems.splice(index, 1) }
+        // Remaps ids for index
+        project.listItems.forEach((todo, i) => {
+            todo.id = i;
+        })
+    }
+
+    return { defaultProject, addTodo, editTodo, deleteTodo }
+})();
+
+/*
+// VIEW CONTROLLER
 const domManipulator = (() => {
     const root = document.body;
 
-    const createToDoList = function(toDoItem) {
+    const createToDoList = function (toDoItem) {
         const toDoListElement = document.createElement('div');
         toDoListElement.classList.add('toDoList');
         const toDoListName = document.createElement('h1');
@@ -28,7 +71,4 @@ const domManipulator = (() => {
 
     return { createToDoList };
 })();
-
-project1.forEach(item => domManipulator.createToDoList(item));
-
-console.log(project1);
+*/
