@@ -27,10 +27,10 @@ const model = (() => {
         // Finds todo with correct id and edits values
         project.listItems.map((todo) => {
             if (todo.id === id) {
-            if (newName != undefined) { todo.taskName = newName }
-            if (newPrio != undefined) { todo.priority = newPrio }
-            if (newDate != undefined) { todo.dueDate = newDate }
-            if (newDesc != undefined) { todo.description = newDesc }
+                if (newName != undefined) { todo.taskName = newName }
+                if (newPrio != undefined) { todo.priority = newPrio }
+                if (newDate != undefined) { todo.dueDate = newDate }
+                if (newDesc != undefined) { todo.description = newDesc }
             }
             return todo;
         })
@@ -50,25 +50,40 @@ const model = (() => {
     return { defaultProject, addTodo, editTodo, deleteTodo }
 })();
 
-/*
 // VIEW CONTROLLER
-const domManipulator = (() => {
-    const root = document.body;
+const view = (() => {
+    const root = document.querySelector('#todoBar');
 
-    const createToDoList = function (toDoItem) {
-        const toDoListElement = document.createElement('div');
-        toDoListElement.classList.add('toDoList');
-        const toDoListName = document.createElement('h1');
-        toDoListName.classList.add('toDoListName');
-        toDoListName.textContent = toDoItem.taskName;
-        const toDoListDescription = document.createElement('p');
-        toDoListDescription.classList.add('toDoListDescription');
-        toDoListDescription.textContent = toDoItem.description;
-        root.appendChild(toDoListElement);
-        toDoListElement.appendChild(toDoListName);
-        toDoListElement.appendChild(toDoListDescription);
+    // Creates todo item
+    const createTodo = function (taskName, description) {
+        const todoElement = document.createElement('div');
+        todoElement.classList.add('todoItem');
+        const todoName = document.createElement('p');
+        todoName.classList.add('name');
+        todoName.textContent = taskName;
+        const todoDescription = document.createElement('p');
+        todoDescription.classList.add('description');
+        todoDescription.textContent = description;
+        todoElement.append(todoName, todoDescription);
+        root.appendChild(todoElement);
     }
 
-    return { createToDoList };
+    // Updates entire todo list
+    const displayTodos = function (todoList) {
+        todoList.forEach(todo => {
+            createTodo(todo.taskName, todo.description);
+        })
+    }
+
+    return { displayTodos };
 })();
-*/
+
+const todoSample = new Array();
+const todo1 = {taskName: "Sleep!", description: "Nappies!"};
+const todo2 = {taskName: "Work!", description: "Coding!"};
+const todo3 = {taskName: "Anime!", description: "Anime!"};
+todoSample.push(todo1);
+todoSample.push(todo2);
+todoSample.push(todo3);
+
+view.displayTodos(todoSample);
