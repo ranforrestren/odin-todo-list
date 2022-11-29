@@ -75,13 +75,32 @@ const view = (() => {
         })
     }
 
+    // Handling for modal button
+    const modalButton = document.querySelector('.openModal');
+    const overlay = document.querySelector('.overlay');
+    const modal = document.querySelector('.modal');
+    // Opens modal button
+    const openModal = function(e) {
+        overlay.classList.remove('hidden');
+        modal.classList.remove('hidden');
+    }
+    // Close modal button
+    const closeModal = function(e) {
+        if (e.target === this) {
+            overlay.classList.add('hidden');
+            modal.classList.add('hidden');
+        }
+    }
+    modalButton.addEventListener('click', openModal);
+    overlay.addEventListener('click', closeModal)
+
     return { displayTodos };
 })();
 
 const todoSample = new Array();
-const todo1 = {taskName: "Sleep!", description: "Nappies!"};
-const todo2 = {taskName: "Work!", description: "Coding!"};
-const todo3 = {taskName: "Anime!", description: "Anime!"};
+const todo1 = {taskName: "Task1!", description: "Description1!"};
+const todo2 = {taskName: "Task2!", description: "Description2!"};
+const todo3 = {taskName: "Task3!", description: "Description3!"};
 todoSample.push(todo1);
 todoSample.push(todo2);
 todoSample.push(todo3);

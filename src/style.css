@@ -52,3 +52,35 @@ body {
     font-size: 2rem;
     width: 200px;
 }
+
+.openModal {
+    height: 80px;
+    width: 80px;
+    border: 0px;
+    border-radius: 40px;
+    margin-left: 20px;
+    font-size: 4em;
+    color: white;
+    background-color: #B2FF59;
+}
+
+.overlay {
+    position: fixed;
+    top: 0px;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+    width: 600px;
+    height: 450px;
+    margin: auto;
+    background-color: white;
+    border-radius: 20px;
+}
+
+.hidden {
+    visibility: hidden;
+}
