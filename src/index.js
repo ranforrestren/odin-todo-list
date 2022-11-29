@@ -1,54 +1,5 @@
 import './style.css';
-
-// MODEL CONTROLLER
-const model = (() => {
-    // Constructor for Project objects
-    const projectFactory = (projectName) => {
-        const listItems = [];
-        return { listItems, projectName }
-    }
-
-    // Default project object
-    const defaultProject = projectFactory('default');
-
-    // Constructor for List objects
-    const todoFactory = (id, taskName, priority, dueDate, description) => {
-        return { id, taskName, priority, dueDate, description };
-    }
-
-    // Add todo
-    const addTodo = function (project = defaultProject, taskName, priority, dueDate = '', description) {
-        const todo = todoFactory(project.listItems.length, taskName, priority, dueDate, description);
-        project.listItems.push(todo);
-    }
-
-    // Edit todo
-    const editTodo = function (project = defaultProject, id, newName, newPrio, newDate, newDesc) {
-        // Finds todo with correct id and edits values
-        project.listItems.map((todo) => {
-            if (todo.id === id) {
-                if (newName != undefined) { todo.taskName = newName }
-                if (newPrio != undefined) { todo.priority = newPrio }
-                if (newDate != undefined) { todo.dueDate = newDate }
-                if (newDesc != undefined) { todo.description = newDesc }
-            }
-            return todo;
-        })
-    }
-
-    // Delete todo
-    const deleteTodo = function (project = defaultProject, id) {
-        // Finds todo with correct id and deletes it
-        const index = project.listItems.findIndex(todo => todo.id === id);
-        if (index > -1) { project.listItems.splice(index, 1) }
-        // Remaps ids for index
-        project.listItems.forEach((todo, i) => {
-            todo.id = i;
-        })
-    }
-
-    return { defaultProject, addTodo, editTodo, deleteTodo }
-})();
+import { model, defaultProject } from './model.js';
 
 // VIEW CONTROLLER
 const view = (() => {
@@ -104,7 +55,7 @@ const view = (() => {
         const description = document.getElementById('description').value;
         model.addTodo(undefined, taskName.value, undefined, undefined, description);
         closeModal(this);
-        displayTodos(model.defaultProject.listItems);
+        displayTodos(defaultProject.listItems);
     }
     submitButton.addEventListener('click', submitModal);
 
@@ -114,4 +65,6 @@ const view = (() => {
 model.addTodo(undefined, "Test1", undefined, undefined, "Test Description 1");
 model.addTodo(undefined, "Test2", undefined, undefined, "Test Description 2");
 model.addTodo(undefined, "Test3", undefined, undefined, "Test Description 3");
-view.displayTodos(model.defaultProject.listItems);
+view.displayTodos(defaultProject.listItems);
+
+model2.testFunc();
