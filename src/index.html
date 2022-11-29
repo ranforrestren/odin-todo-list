@@ -12,11 +12,15 @@
             <div id="projectBar"></div>
             <div id="todoBar">
             </div>
-            <button class="openModal">+</button>
+            <button id="openModal" class="button">+</button>
         </div>
     </div>
     <div class="overlay hidden">
-        <div class="modal hidden"></div>
+        <form class="modal hidden">
+            <input type="text" id="taskName" class="textInput" name="taskName" placeholder="name here">
+            <input type="text" id="description" class="textInput" name="description" placeholder="desc here">
+            <button id="submitButton" class="button small" type="button">Add</button>
+        </form>
     </div>
 </body>
 </html>

@@ -70,20 +70,24 @@ const view = (() => {
 
     // Updates entire todo list
     const displayTodos = function (todoList) {
+        root.replaceChildren();
         todoList.forEach(todo => {
             createTodo(todo.taskName, todo.description);
         })
     }
 
     // Handling for modal button
-    const modalButton = document.querySelector('.openModal');
+    const modalButton = document.querySelector('#openModal');
     const overlay = document.querySelector('.overlay');
     const modal = document.querySelector('.modal');
+    const submitButton = document.querySelector('#submitButton');
+
     // Opens modal button
-    const openModal = function(e) {
+    const openModal = function() {
         overlay.classList.remove('hidden');
         modal.classList.remove('hidden');
     }
+
     // Close modal button
     const closeModal = function(e) {
         if (e.target === this) {
@@ -94,15 +98,20 @@ const view = (() => {
     modalButton.addEventListener('click', openModal);
     overlay.addEventListener('click', closeModal)
 
+    // Handling for submission of new todo (MOVE TO CONTROLLER LATER!)
+    const submitModal = function() {
+        const taskName = document.getElementById('taskName');
+        const description = document.getElementById('description').value;
+        model.addTodo(undefined, taskName.value, undefined, undefined, description);
+        closeModal(this);
+        displayTodos(model.defaultProject.listItems);
+    }
+    submitButton.addEventListener('click', submitModal);
+
     return { displayTodos };
 })();
 
-const todoSample = new Array();
-const todo1 = {taskName: "Task1!", description: "Description1!"};
-const todo2 = {taskName: "Task2!", description: "Description2!"};
-const todo3 = {taskName: "Task3!", description: "Description3!"};
-todoSample.push(todo1);
-todoSample.push(todo2);
-todoSample.push(todo3);
-
-view.displayTodos(todoSample);
+model.addTodo(undefined, "Test1", undefined, undefined, "Test Description 1");
+model.addTodo(undefined, "Test2", undefined, undefined, "Test Description 2");
+model.addTodo(undefined, "Test3", undefined, undefined, "Test Description 3");
+view.displayTodos(model.defaultProject.listItems);
