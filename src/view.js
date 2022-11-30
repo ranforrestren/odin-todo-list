@@ -12,7 +12,7 @@ const submitAddTodoButton = document.querySelector('#submitAddTodoButton');
 const view = {
 
     // Creates todo item
-    createTodo(taskName, description) {
+    createTodo(id, taskName, description) {
         // Create todo elements
         const todoElement = document.createElement('div');
         todoElement.classList.add('todoItem');
@@ -24,6 +24,9 @@ const view = {
         todoDeleteButton.classList.add('button', 'delete');
         const todoEditButton = document.createElement('button');
         todoEditButton.classList.add('button', 'edit');
+        // Add id data-attribute to buttons and adds event handler
+        todoDeleteButton.setAttribute('data-id', id);
+        todoDeleteButton.addEventListener('click', view.deleteTodoClickEvent)
         // Injects data to todo elements
         todoName.textContent = taskName;
         todoDescription.textContent = description;
@@ -37,7 +40,7 @@ const view = {
     displayTodos(project) {
         root.replaceChildren();
         project.listItems.forEach(todo => {
-            view.createTodo(todo.taskName, todo.description);
+            view.createTodo(todo.id, todo.taskName, todo.description);
         })
     },
 
@@ -56,6 +59,11 @@ const view = {
     // Handling for submission of new todo (MOVE TO CONTROLLER LATER!)
     submitModal() {
         view.closeModal();
+    },
+
+    // Event for when delete todo button is clicked
+    deleteTodoClickEvent(e) {
+        controller.handleDeleteTodoClick(e.target);
     },
 
     // Event for when open modal button is clicked

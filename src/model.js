@@ -41,12 +41,14 @@ const model = {
     // Delete todo
     deleteTodo(project = defaultProject, id) {
         // Finds todo with correct id and deletes it
-        const index = project.listItems.findIndex(todo => todo.id === id);
+        const index = project.listItems.findIndex(todo => todo.id == id);
         if (index > -1) { project.listItems.splice(index, 1) }
         // Remaps ids for index
         project.listItems.forEach((todo, i) => {
             todo.id = i;
         })
+        // Sends request to refresh todo list
+        controller.refreshViewTodosReq(defaultProject);
     },
 }
 

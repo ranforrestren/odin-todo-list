@@ -13,6 +13,12 @@ const controller = {
         model.deleteTodo(defaultProject, id);
     },
 
+    // Handle delete todo click event
+    handleDeleteTodoClick(e) {
+        console.log(e.dataset.id);
+        model.deleteTodo(defaultProject, e.dataset.id);
+    },
+
     // Handles open modal click event
     handleOpenModalClick() {
         view.openModal();
