@@ -1,3 +1,5 @@
+import controller from "./controller.js";
+
 // Constructor for Project objects
 const projectFactory = (projectName) => {
     const listItems = [];
@@ -19,6 +21,7 @@ const model = {
     addTodo(project = defaultProject, taskName, priority, dueDate = '', description) {
         const todo = model.todoFactory(project.listItems.length, taskName, priority, dueDate, description);
         project.listItems.push(todo);
+        controller.refreshViewTodosReq(defaultProject);
     },
 
     // Edit todo
@@ -46,7 +49,6 @@ const model = {
         })
     },
 }
-
 
 export {
     model,
