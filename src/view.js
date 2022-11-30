@@ -5,23 +5,31 @@ import controller from './controller.js';
 const root = document.querySelector('#todoBar');
 const overlay = document.querySelector('.overlay');
 const modal = document.querySelector('.modal');
-const addTodoButton = document.querySelector('#addTodoButton');
-const submitButton = document.querySelector('#submitButton');
+const openModalButton = document.querySelector('#openModalButton');
+const submitAddTodoButton = document.querySelector('#submitAddTodoButton');
 
 // VIEW CONTROLLER
 const view = {
 
     // Creates todo item
     createTodo(taskName, description) {
+        // Create todo elements
         const todoElement = document.createElement('div');
         todoElement.classList.add('todoItem');
         const todoName = document.createElement('p');
         todoName.classList.add('name');
-        todoName.textContent = taskName;
         const todoDescription = document.createElement('p');
         todoDescription.classList.add('description');
+        const todoDeleteButton = document.createElement('button');
+        todoDeleteButton.classList.add('button', 'delete');
+        const todoEditButton = document.createElement('button');
+        todoEditButton.classList.add('button', 'edit');
+        // Injects data to todo elements
+        todoName.textContent = taskName;
         todoDescription.textContent = description;
-        todoElement.append(todoName, todoDescription);
+        todoDeleteButton.textContent = 'X';
+        // Adds todo to the DOM
+        todoElement.append(todoName, todoDescription, todoEditButton, todoDeleteButton);
         root.appendChild(todoElement);
     },
 
@@ -33,18 +41,16 @@ const view = {
         })
     },
 
-    // Opens AddTodo Modal
-    openAddTodoModal() {
+    // Opens modal
+    openModal() {
         overlay.classList.remove('hidden');
         modal.classList.remove('hidden');
     },
 
-    // Close modal button
-    closeModal(e) {
-        if (e.target === this) {
-            overlay.classList.add('hidden');
-            modal.classList.add('hidden');
-        }
+    // Close modal
+    closeModal() {
+        overlay.classList.add('hidden');
+        modal.classList.add('hidden');
     },
 
     // Handling for submission of new todo (MOVE TO CONTROLLER LATER!)
@@ -57,6 +63,14 @@ const view = {
         controller.handleOpenModalClick();
     },
 
+    // Event for when the close modal area (overlay) is clicked
+    closeModalClickEvent(e) {
+        // Check if overlay and not modal was targetted with click
+        if (e.target === this) {
+            controller.handleCloseModalClick();
+        }
+    }, 
+
     // Event for when add todo button is clicked
     addTodoClickEvent() {
         const taskName = document.getElementById('taskName').value;
@@ -66,8 +80,8 @@ const view = {
 }
 
 // Setup event listeners
-addTodoButton.addEventListener('click', view.openModalClickEvent);
-overlay.addEventListener('click', view.closeModal);
-submitButton.addEventListener('click', view.addTodoClickEvent);
+openModalButton.addEventListener('click', view.openModalClickEvent);
+overlay.addEventListener('click', view.closeModalClickEvent);
+submitAddTodoButton.addEventListener('click', view.addTodoClickEvent);
 
 export default view;

@@ -55,6 +55,11 @@ body {
     width: 200px;
 }
 
+.description {
+    font-size: 1rem;
+    width: 350px;
+}
+
 .button {
     height: 80px;
     width: 80px;
@@ -70,6 +75,22 @@ body {
     width: 120px;
     border-radius: 25px;
     font-size: 1.5rem;
+}
+
+.todoItem .button {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    background-color: #FF6E40;
+    font-size: 1rem;
+}
+
+.button.edit {
+    background-color: #FFD740;
+}
+
+.button.delete {
+    background-color: #FF6E40;
 }
 
 .overlay {

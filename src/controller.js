@@ -15,12 +15,18 @@ const controller = {
 
     // Handles open modal click event
     handleOpenModalClick() {
-        view.openAddTodoModal();
+        view.openModal();
+    },
+
+    // Handles close modal click event
+    handleCloseModalClick() {
+        view.closeModal();
     },
 
     // Handles add todo click event
     handleAddTodoClick(taskName, description) {
         model.addTodo(defaultProject, taskName, undefined, undefined, description);
+        view.closeModal();
     },
 
     // Sends request to update DOM Todos
