@@ -14,7 +14,7 @@ body {
 #mainContent {
     display: flex;
     height: 800px;
-    width: 1200px;
+    width: 1300px;
     margin: auto;
 }
 
@@ -25,18 +25,23 @@ body {
     border-radius: 20px 0px 0px 20px;
 }
 
-#todoBar {
-    display: flex;
-    flex-direction: column;
+#todoWrapper{
     box-sizing: border-box;
-    padding: 40px;
-    gap: 20px;
     height: 800px;
     width: 900px;
-    overflow: auto;
+    padding: 40px 20px 40px 40px;
     margin-right: 20px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 0px 20px 20px 0px;
+}
+
+#todoBar {
+    display: flex;
+    flex-direction: column;
+    height: 720px;
+    padding-right: 20px;
+    gap: 20px;
+    overflow: auto;
 }
 
 .todoItem {
@@ -52,7 +57,7 @@ body {
 
 .name {
     font-size: 2rem;
-    width: 200px;
+    width: 250px;
 }
 
 .description {
@@ -61,10 +66,12 @@ body {
 }
 
 .button {
+    display: block;
     height: 80px;
     width: 80px;
     border: 0px;
     border-radius: 40px;
+    padding: 0px;
     font-size: 4rem;
     color: white;
     background-color: #B2FF59;
@@ -81,7 +88,6 @@ body {
     height: 40px;
     width: 40px;
     border-radius: 20px;
-    background-color: #FF6E40;
     font-size: 1rem;
 }
 
@@ -126,4 +132,18 @@ body {
     background-color: rgba(225, 225, 225, 0.8);
     padding-left: 40px;
     font-size: 1.5rem;
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+::-webkit-scrollbar-track {
+    border: solid 2px rgba(200, 200, 200, 0.8);
+    border-radius: 10px;
+  }
+
+::-webkit-scrollbar-thumb {
+    background: rgba(180, 180, 180, 0.8);
+    border-radius: 10px;
 }

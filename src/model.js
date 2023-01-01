@@ -1,13 +1,13 @@
 import controller from "./controller.js";
 
 // Constructor for Project objects
-const projectFactory = (projectName) => {
+const projectFactory = (projectName, colorTag) => {
     const listItems = [];
-    return { listItems, projectName }
+    return { listItems, projectName, colorTag }
 }
 
 // Default project object
-const defaultProject = projectFactory('default');
+const defaultProject = projectFactory('default', 'white');
 
 // MODEL CONTROLLER
 const model = {

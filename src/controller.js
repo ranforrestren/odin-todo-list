@@ -35,6 +35,8 @@ const controller = {
         view.closeModal();
     },
 
+    // Sends request to update DOM Projects
+    
     // Sends request to update DOM Todos
     refreshViewTodosReq(project) {
         view.displayTodos(project);
