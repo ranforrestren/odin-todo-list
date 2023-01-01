@@ -19,8 +19,15 @@
     </div>
     <div class="overlay hidden">
         <form class="modal hidden">
-            <input type="text" id="taskName" class="textInput" name="taskName" placeholder="name here">
-            <input type="text" id="description" class="textInput" name="description" placeholder="desc here">
+            <input type="text" id="taskName" class="textInput input" name="taskName" placeholder="name here">
+            <input type="date" id="dueDate" class="dateInput input" name="dueDate" value="2023-12-31">
+            <select id="taskPriority" class="priorityInput input" name="taskPriority">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+                <option value="Default">Default</option>
+            </select>
+            <input type="text" id="description" class="textInput input" name="description" placeholder="description here">
             <button id="submitAddTodoButton" class="button small" type="button">Add</button>
         </form>
     </div>
