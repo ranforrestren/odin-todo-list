@@ -144,6 +144,18 @@ body {
 
 .priorityInput {
     font-size: 1.2rem;
+    appearance: none;
+}
+
+.input#description {
+    padding: 10px 10px 10px 40px;
+    font-size: 1.2rem;
+    flex-grow: 1;
+    resize: none;
+}
+
+.input#description::-webkit-scrollbar {
+    width: 10px;
 }
 
 ::-webkit-scrollbar {

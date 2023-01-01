@@ -22,12 +22,12 @@
             <input type="text" id="taskName" class="textInput input" name="taskName" placeholder="name here">
             <input type="date" id="dueDate" class="dateInput input" name="dueDate" value="2023-12-31">
             <select id="taskPriority" class="priorityInput input" name="taskPriority">
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-                <option value="Default">Default</option>
+                <option class="selectOpt" value="High">High</option>
+                <option class="selectOpt" value="Medium">Medium</option>
+                <option class="selectOpt"value="Low">Low</option>
+                <option class="selectOpt" value="Default" selected>Default</option>
             </select>
-            <input type="text" id="description" class="textInput input" name="description" placeholder="description here">
+            <textarea id="description" class="input" name="description" rows="8" placeholder="description here"></textarea>
             <button id="submitAddTodoButton" class="button small" type="button">Add</button>
         </form>
     </div>
