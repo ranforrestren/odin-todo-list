@@ -5,6 +5,12 @@ import controller from './controller.js';
 const root = document.querySelector('#todoBar');
 const overlay = document.querySelector('.overlay');
 const modal = document.querySelector('.modal');
+
+const taskNameInput = document.querySelector('#taskName');
+const dueDateInput = document.querySelector('#dueDate');
+const priorityInput = document.querySelector('#taskPriority');
+const descriptionInput = document.querySelector('#description');
+
 const openModalButton = document.querySelector('#openModalButton');
 const submitAddTodoButton = document.querySelector('#submitAddTodoButton');
 
@@ -24,9 +30,13 @@ const view = {
         todoDeleteButton.classList.add('button', 'delete');
         const todoEditButton = document.createElement('button');
         todoEditButton.classList.add('button', 'edit');
-        // Add id data-attribute to buttons and adds event handler
+        // Add id data-attribute to elements
+        todoElement.setAttribute('data-id', id);
         todoDeleteButton.setAttribute('data-id', id);
-        todoDeleteButton.addEventListener('click', view.deleteTodoClickEvent)
+        // Adds event handler for deleting todo
+        todoDeleteButton.addEventListener('click', view.deleteTodoClickEvent);
+        // Adds event handler for opening todo
+        todoElement.addEventListener('click', view.openTodoClickEvent);
         // Injects data to todo elements
         todoName.textContent = taskName;
         todoDescription.textContent = description;
@@ -52,18 +62,26 @@ const view = {
 
     // Close modal
     closeModal() {
+        // Resets inputs in modal
+        taskNameInput.value = "";
+        const date = new Date();
+        dueDateInput.value = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
+        priorityInput.value = "Default";
+        descriptionInput.value = "";
+        // Hides modal
         overlay.classList.add('hidden');
         modal.classList.add('hidden');
     },
 
-    // Handling for submission of new todo (MOVE TO CONTROLLER LATER!)
-    submitModal() {
-        view.closeModal();
+    // Event for when open todo event is fired
+    openTodoClickEvent(e) {
+        controller.handleOpenTodoClick(e);
     },
 
     // Event for when delete todo button is clicked
     deleteTodoClickEvent(e) {
-        controller.handleDeleteTodoClick(e.target);
+        e.stopPropagation();
+        controller.handleDeleteTodoClick(e);
     },
 
     // Event for when open modal button is clicked
