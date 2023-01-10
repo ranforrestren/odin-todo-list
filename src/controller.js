@@ -4,8 +4,8 @@ import view from './view.js';
 // CONTROLLER
 const controller = {
     // Sends request to add Todo
-    addTodoReq(taskName, priority, dueDate, description) {
-        model.addTodo(defaultProject, taskName, priority, dueDate, description);
+    createTodoReq(taskName, priority, dueDate, description) {
+        model.createTodo(defaultProject, taskName, priority, dueDate, description);
     },
 
     // Sends request to delete Todo
@@ -24,6 +24,12 @@ const controller = {
         model.deleteTodo(defaultProject, e.target.dataset.id);
     },
 
+    // Handles add todo click event
+    handleAddTodoClick(taskName, description) {
+        model.createTodo(defaultProject, taskName, undefined, undefined, description);
+        view.closeModal();
+    },
+
     // Handles open modal click event
     handleOpenModalClick() {
         view.openModal();
@@ -33,13 +39,6 @@ const controller = {
     handleCloseModalClick() {
         view.closeModal();
     },
-
-    // Handles add todo click event
-    handleAddTodoClick(taskName, description) {
-        model.addTodo(defaultProject, taskName, undefined, undefined, description);
-        view.closeModal();
-    },
-
     // Sends request to update DOM Projects
     
     // Sends request to update DOM Todos

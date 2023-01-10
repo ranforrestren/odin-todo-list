@@ -17,15 +17,15 @@ const model = {
         return { id, taskName, priority, dueDate, description };
     },
 
-    // Add todo
-    addTodo(project = defaultProject, taskName, priority, dueDate = '', description) {
+    // Create todo
+    createTodo(project = defaultProject, taskName, priority, dueDate = '', description) {
         const todo = model.todoFactory(project.listItems.length, taskName, priority, dueDate, description);
         project.listItems.push(todo);
         controller.refreshViewTodosReq(defaultProject);
     },
 
-    // Edit todo
-    editTodo(project = defaultProject, id, newName, newPrio, newDate, newDesc) {
+    // Update todo
+    updateTodo(project = defaultProject, id, newName, newPrio, newDate, newDesc) {
         // Finds todo with correct id and edits values
         project.listItems.map((todo) => {
             if (todo.id === id) {
