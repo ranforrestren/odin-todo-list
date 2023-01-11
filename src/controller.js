@@ -13,8 +13,14 @@ const controller = {
         model.deleteTodo(defaultProject, id);
     },
 
-    // Handle open todo click event
-    handleOpenTodoClick(e) {
+    // Handles create todo click event
+    handleCreateTodoClick(taskName, dueDate, priority, description) {
+        model.createTodo(defaultProject, taskName, dueDate, priority, description);
+        view.closeModal();
+    },
+
+    // Handle update todo click event
+    handleReadTodoClick(e) {
         console.log(e.currentTarget.dataset.id);
     },
     
@@ -22,12 +28,6 @@ const controller = {
     handleDeleteTodoClick(e) {
         console.log(e.currentTarget.dataset.id);
         model.deleteTodo(defaultProject, e.target.dataset.id);
-    },
-
-    // Handles add todo click event
-    handleAddTodoClick(taskName, description) {
-        model.createTodo(defaultProject, taskName, undefined, undefined, description);
-        view.closeModal();
     },
 
     // Handles open modal click event

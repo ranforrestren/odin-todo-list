@@ -24,6 +24,12 @@ const model = {
         controller.refreshViewTodosReq(defaultProject);
     },
 
+    // Read todo
+    readTodo(project = defaultProject, id) {
+        const todo = project.find(matchTodo => matchTodo.id == id);
+        return todo;
+    },
+
     // Update todo
     updateTodo(project = defaultProject, id, newName, newPrio, newDate, newDesc) {
         // Finds todo with correct id and edits values
