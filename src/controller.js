@@ -19,23 +19,29 @@ const controller = {
         view.closeModal();
     },
 
-    // Handle update todo click event
+    // Handle read todo click event
     handleReadTodoClick(e) {
         const readTodo = model.readTodo(defaultProject, e.currentTarget.dataset.id);
         // Populates modal with correct info and opens it
-        console.log(readTodo);
         view.addDataModal(readTodo.taskName, readTodo.priority, readTodo.dueDate, readTodo.description);
+        view.setModalButtonBehavior("update", e.currentTarget.dataset.id);
         view.openModal();
     },
     
+    // Handle update todo click event
+    handleUpdateTodoClick(id, taskName, priority, dueDate, description) {
+        model.updateTodo(undefined, id, taskName, priority, dueDate, description);
+        view.closeModal();
+    },
+
     // Handle delete todo click event
     handleDeleteTodoClick(e) {
-        console.log(e.currentTarget.dataset.id);
         model.deleteTodo(defaultProject, e.target.dataset.id);
     },
 
     // Handles open modal click event
     handleOpenModalClick() {
+        view.setModalButtonBehavior("create");
         view.openModal();
     },
 

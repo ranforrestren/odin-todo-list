@@ -12,7 +12,7 @@ const priorityInput = document.querySelector('#taskPriority');
 const descriptionInput = document.querySelector('#description');
 
 const openModalButton = document.querySelector('#openModalButton');
-const submitAddTodoButton = document.querySelector('#submitAddTodoButton');
+const modalButton = document.querySelector('#modalButton');
 
 // Setup default date for inputs (Can move into own function in refactor?)
 const date = new Date();
@@ -42,9 +42,9 @@ const view = {
         todoElement.setAttribute('data-id', id);
         todoDeleteButton.setAttribute('data-id', id);
         // Adds event handler for deleting todo
-        todoDeleteButton.addEventListener('click', view.deleteTodoClickEvent);
+        todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
         // Adds event handler for opening todo
-        todoElement.addEventListener('click', view.readTodoClickEvent);
+        todoElement.addEventListener('click', this.readTodoClickEvent);
         // Sets correct priority data attribute
         todoPriority.setAttribute("data-priority", priority);
         // Injects data to todo elements
@@ -61,7 +61,7 @@ const view = {
     displayTodos(project) {
         root.replaceChildren();
         project.listItems.forEach(todo => {
-            view.createTodo(todo.id, todo.taskName, todo.priority, todo.dueDate, todo.description);
+            this.createTodo(todo.id, todo.taskName, todo.priority, todo.dueDate, todo.description);
         })
     },
 
@@ -88,6 +88,28 @@ const view = {
         modal.classList.add('hidden');
     },
     
+    // Sets behavior modal button to add / edit
+    setModalButtonBehavior(mode, id) {
+        this.removeModalButtonListeners();
+        if (mode === "create") {
+            modalButton.setAttribute("data-mode", "create");
+            modalButton.textContent = "Create";
+            modalButton.addEventListener('click', this.createTodoClickEvent);
+        }
+        else if (mode === "update") {
+            modalButton.setAttribute("data-mode", "update");
+            modalButton.textContent = "Update";
+            modalButton.setAttribute('data-id', id);
+            modalButton.addEventListener('click', this.updateTodoClickEvent);
+        }
+    },
+
+    // Removes modal button listeners
+    removeModalButtonListeners() {
+        modalButton.removeEventListener('click', this.createTodoClickEvent);
+        modalButton.removeEventListener('click', this.updateTodoClickEvent);
+    },
+
     // Event for when create todo button is clicked
     createTodoClickEvent() {
         const taskName = document.getElementById('taskName').value;
@@ -95,6 +117,16 @@ const view = {
         const dueDate = document.getElementById('dueDate').value;
         const description = document.getElementById('description').value;
         controller.handleCreateTodoClick(taskName, priority, dueDate, description);
+    },
+    
+    // Event for when update todo button is click
+    updateTodoClickEvent(e) {
+        const id = e.currentTarget.dataset.id;
+        const taskName = document.getElementById('taskName').value;
+        const priority = document.getElementById('taskPriority').value;
+        const dueDate = document.getElementById('dueDate').value;
+        const description = document.getElementById('description').value;
+        controller.handleUpdateTodoClick(id, taskName, priority, dueDate, description);
     },
 
     // Event for when read todo event is fired
@@ -125,6 +157,5 @@ const view = {
 // Setup event listeners
 openModalButton.addEventListener('click', view.openModalClickEvent);
 overlay.addEventListener('click', view.closeModalClickEvent);
-submitAddTodoButton.addEventListener('click', view.createTodoClickEvent);
 
 export default view;

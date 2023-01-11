@@ -33,15 +33,12 @@ const model = {
     // Update todo
     updateTodo(project = defaultProject, id, newName, newPrio, newDate, newDesc) {
         // Finds todo with correct id and edits values
-        project.listItems.map((todo) => {
-            if (todo.id === id) {
-                if (newName != undefined) { todo.taskName = newName }
-                if (newPrio != undefined) { todo.priority = newPrio }
-                if (newDate != undefined) { todo.dueDate = newDate }
-                if (newDesc != undefined) { todo.description = newDesc }
-            }
-            return todo;
-        })
+        const todo = project.listItems.find(matchTodo => matchTodo.id == id);
+        if (newName != undefined) { todo.taskName = newName }
+        if (newPrio != undefined) { todo.priority = newPrio }
+        if (newDate != undefined) { todo.dueDate = newDate }
+        if (newDesc != undefined) { todo.description = newDesc }
+        controller.refreshViewTodosReq(defaultProject);
     },
 
     // Delete todo
