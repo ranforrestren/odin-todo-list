@@ -14,14 +14,18 @@ const controller = {
     },
 
     // Handles create todo click event
-    handleCreateTodoClick(taskName, dueDate, priority, description) {
-        model.createTodo(defaultProject, taskName, dueDate, priority, description);
+    handleCreateTodoClick(taskName, priority, dueDate, description) {
+        model.createTodo(defaultProject, taskName, priority, dueDate, description);
         view.closeModal();
     },
 
     // Handle update todo click event
     handleReadTodoClick(e) {
-        console.log(e.currentTarget.dataset.id);
+        const readTodo = model.readTodo(defaultProject, e.currentTarget.dataset.id);
+        // Populates modal with correct info and opens it
+        console.log(readTodo);
+        view.addDataModal(readTodo.taskName, readTodo.priority, readTodo.dueDate, readTodo.description);
+        view.openModal();
     },
     
     // Handle delete todo click event

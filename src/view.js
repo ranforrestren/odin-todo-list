@@ -14,6 +14,10 @@ const descriptionInput = document.querySelector('#description');
 const openModalButton = document.querySelector('#openModalButton');
 const submitAddTodoButton = document.querySelector('#submitAddTodoButton');
 
+// Setup default date for inputs (Can move into own function in refactor?)
+const date = new Date();
+const currentDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
+
 // VIEW CONTROLLER
 const view = {
 
@@ -61,6 +65,14 @@ const view = {
         })
     },
 
+    // Populates modal with provided info
+    addDataModal(taskName = "", priority = "Default", dueDate = currentDate, description = "") {
+        taskNameInput.value = taskName;
+        priorityInput.value = priority;
+        dueDateInput.value = currentDate;
+        descriptionInput.value = description;
+    },
+
     // Opens modal
     openModal() {
         overlay.classList.remove('hidden');
@@ -70,16 +82,12 @@ const view = {
     // Close modal
     closeModal() {
         // Resets inputs in modal
-        taskNameInput.value = "";
-        const date = new Date();
-        dueDateInput.value = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
-        priorityInput.value = "Default";
-        descriptionInput.value = "";
+        this.addDataModal();
         // Hides modal
         overlay.classList.add('hidden');
         modal.classList.add('hidden');
     },
-
+    
     // Event for when create todo button is clicked
     createTodoClickEvent() {
         const taskName = document.getElementById('taskName').value;

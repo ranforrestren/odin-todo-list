@@ -26,7 +26,7 @@ const model = {
 
     // Read todo
     readTodo(project = defaultProject, id) {
-        const todo = project.find(matchTodo => matchTodo.id == id);
+        const todo = project.listItems.find(matchTodo => matchTodo.id == id);
         return todo;
     },
 
