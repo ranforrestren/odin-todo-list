@@ -26,6 +26,8 @@ const view = {
         todoPriority.classList.add('priority');
         const todoName = document.createElement('p');
         todoName.classList.add('name');
+        const todoDueDate = document.createElement('p');
+        todoDueDate.classList.add('dueDate');
         const todoDescription = document.createElement('p');
         todoDescription.classList.add('description');
         const todoEditButton = document.createElement('button');
@@ -43,10 +45,11 @@ const view = {
         todoPriority.setAttribute("data-priority", priority);
         // Injects data to todo elements
         todoName.textContent = taskName;
+        todoDueDate.textContent = dueDate;
         todoDescription.textContent = description;
         todoDeleteButton.textContent = 'X';
         // Adds todo to the DOM
-        todoElement.append(todoPriority, todoName, todoDescription, todoEditButton, todoDeleteButton);
+        todoElement.append(todoPriority, todoName, todoDueDate, todoDescription, todoEditButton, todoDeleteButton);
         root.appendChild(todoElement);
     },
 
