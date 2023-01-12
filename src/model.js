@@ -59,17 +59,26 @@ const model = {
         let description = command.parameters.description;
         if (!description) { description = "Default Description"};
         const todo = model.todoFactory(taskName, priority, dueDate, description);
+        const index = project.listItems.findIndex(todo => todo.id > command.parameters.id );
         // Check if there is an ID (undo operation), if not then assign ID
         if (command.parameters.id) {
+            command.commandType = "create";
             todo.id = command.parameters.id;
             const index = project.listItems.findIndex(todo => todo.id > command.parameters.id );
+            if (project.listItems[index]) {
+                command.parameters.indexID = project.listItems[index].id;
+            } else {
+                command.parameters.indexID = undefined;
+            }
             project.listItems.splice(index, 0, todo);
         } else {
             todo.id = this.idCounter++;
             command.parameters.id = todo.id;
             project.listItems.push(todo);
         }
-        controller.refreshViewTodosReq(defaultProject);
+        // Sends a command for creating the DOM element visually
+        console.log(command);
+        controller.handleViewCommand(command);
     },
 
     // Read todo

@@ -3,8 +3,13 @@ import view from './view.js';
 
 // CONTROLLER
 const controller = {
+    // Forwards commands to view
+    handleViewCommand(command) {
+        view.handleCommand(command);
+    },
+    
     // Forwards commands to model
-    handleCommand(command) {
+    handleModelCommand(command) {
         model.handleCommand(command);
     },
 

@@ -21,12 +21,30 @@ const currentDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)
 
 // VIEW CONTROLLER
 const view = {
+    // Handles commands
+    handleCommand(command) {
+        if (command.commandType === "create") {
+            let id = command.parameters.id;
+            let taskName = command.parameters.taskName;
+            let priority = command.parameters.priority;
+            let dueDate = command.parameters.dueDate;
+            let description = command.parameters.description;
+            let indexID = command.parameters.indexID;
+            this.createTodo(id, taskName, priority, dueDate, description, indexID);
+        }
+        if (command.commandType === "update") {
+            console.log("UPDATE COMMAND");
+        }
+        if (command.commandType === "delete") {
+            console.log("DELETE COMMAND");
+        }
+    },
 
     // Creates todo item
-    createTodo(id, taskName, priority, dueDate, description) {
+    createTodo(id, taskName, priority, dueDate, description, indexID = undefined) {
         // Create todo elements
         const todoElement = document.createElement('div');
-        todoElement.classList.add('todoItem');
+        todoElement.classList.add('todoItem', 'createAnimation');
         const todoPriority = document.createElement('div');
         todoPriority.classList.add('priority');
         const todoName = document.createElement('p');
@@ -53,7 +71,13 @@ const view = {
         todoDeleteButton.textContent = 'X';
         // Adds todo to the DOM
         todoElement.append(todoPriority, todoName, todoDueDate, todoDescription, todoDeleteButton);
+        if (indexID) {
+            // Undo operation
+            const afterNode = root.querySelector(`[data-id="${indexID}"`);
+            root.insertBefore(todoElement, afterNode);
+        } else {
         root.appendChild(todoElement);
+        }
     },
 
     // Updates entire todo list
@@ -118,7 +142,7 @@ const view = {
         // Create and pass "create" command
         const parameters = {taskName: taskName, priority: priority, dueDate: dueDate, description: description};
         const command = commandFactory("create", parameters);
-        controller.handleCommand(command);
+        controller.handleModelCommand(command);
     },
 
     // Event for when read todo event is fired
@@ -127,7 +151,7 @@ const view = {
         const id = e.currentTarget.dataset.id;
         const parameters = {id: id};
         const command = commandFactory("read", parameters);
-        controller.handleCommand(command);
+        controller.handleModelCommand(command);
     },
 
     // Event for when update todo event is fired
@@ -140,7 +164,7 @@ const view = {
         // Create and pass "create" command
         const parameters = {id: id, taskName: taskName, priority: priority, dueDate: dueDate, description: description};
         const command = commandFactory("update", parameters);
-        controller.handleCommand(command);
+        controller.handleModelCommand(command);
     },
 
     // Event for when delete todo event is fired
@@ -150,14 +174,14 @@ const view = {
         const id = e.currentTarget.dataset.id;
         const parameters = {id: id};
         const command = commandFactory("delete", parameters);
-        controller.handleCommand(command);
+        controller.handleModelCommand(command);
     },
 
     // Event for when undo event is fired
     undoClickEvent() {
         // Create and pass "undo" command
         const command = commandFactory("undo", undefined);
-        controller.handleCommand(command);
+        controller.handleModelCommand(command);
     },
 
     // Event for when open modal button is clicked
