@@ -1,6 +1,10 @@
 body {
     margin: 0px;
-    font-family:'Times New Roman', Times, serif;
+}
+
+body, input, textarea {
+    font-family:'Montserrat', sans-serif;
+    font-weight: 300;
 }
 
 #container {
@@ -78,14 +82,13 @@ body {
     overflow: hidden;
     white-space: nowrap;
     font-size: 2rem;
-    font-weight: 500;
     width: 160px;
     padding-left: 40px;
 }
 
 .todoItem .dueDate {
-    font-weight: 700;
-    width: 80px;
+    font-weight: 500;
+    width: 100px;
 }
 
 .todoItem .description {

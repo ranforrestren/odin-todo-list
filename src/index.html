@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDoList</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div id="container">
         <div id="mainContent">
@@ -26,13 +31,15 @@
             <select id="taskPriority" class="priorityInput input" name="taskPriority">
                 <option class="selectOpt" value="High">High</option>
                 <option class="selectOpt" value="Medium">Medium</option>
-                <option class="selectOpt"value="Low">Low</option>
+                <option class="selectOpt" value="Low">Low</option>
                 <option class="selectOpt" value="Default" selected>Default</option>
             </select>
             <input type="date" id="dueDate" class="dateInput input" name="dueDate" value="2023-01-01">
-            <textarea id="description" class="input" name="description" rows="8" placeholder="description here"></textarea>
+            <textarea id="description" class="input" name="description" rows="8"
+                placeholder="description here"></textarea>
             <button id="modalButton" class="button small" type="button"></button>
         </form>
     </div>
 </body>
+
 </html>
