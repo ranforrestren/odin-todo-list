@@ -1,5 +1,5 @@
-import { model, defaultProject } from './model.js';
 import controller from './controller.js';
+import commandFactory from './command.js';
 
 // DOM Element Setup
 const root = document.querySelector('#todoBar');
@@ -34,13 +34,11 @@ const view = {
         todoDueDate.classList.add('dueDate');
         const todoDescription = document.createElement('p');
         todoDescription.classList.add('description');
-        const todoEditButton = document.createElement('button');
-        todoEditButton.classList.add('button', 'edit');
         const todoDeleteButton = document.createElement('button');
         todoDeleteButton.classList.add('button', 'delete');
-        // Add id data-attribute to elements
-        todoElement.setAttribute('data-id', id);
-        todoDeleteButton.setAttribute('data-id', id);
+        // Add index data-attribute to elements
+        todoElement.setAttribute('data-index', id);
+        todoDeleteButton.setAttribute('data-index', id);
         // Adds event handler for deleting todo
         todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
         // Adds event handler for opening todo
@@ -53,7 +51,7 @@ const view = {
         todoDescription.textContent = description;
         todoDeleteButton.textContent = 'X';
         // Adds todo to the DOM
-        todoElement.append(todoPriority, todoName, todoDueDate, todoDescription, todoEditButton, todoDeleteButton);
+        todoElement.append(todoPriority, todoName, todoDueDate, todoDescription, todoDeleteButton);
         root.appendChild(todoElement);
     },
 
@@ -99,7 +97,7 @@ const view = {
         else if (mode === "update") {
             modalButton.setAttribute("data-mode", "update");
             modalButton.textContent = "Update";
-            modalButton.setAttribute('data-id', id);
+            modalButton.setAttribute('data-index', id);
             modalButton.addEventListener('click', this.updateTodoClickEvent);
         }
     },
@@ -110,34 +108,48 @@ const view = {
         modalButton.removeEventListener('click', this.updateTodoClickEvent);
     },
 
-    // Event for when create todo button is clicked
+    // Event for when create todo event is fired
     createTodoClickEvent() {
         const taskName = document.getElementById('taskName').value;
         const priority = document.getElementById('taskPriority').value;
         const dueDate = document.getElementById('dueDate').value;
         const description = document.getElementById('description').value;
-        controller.handleCreateTodoClick(taskName, priority, dueDate, description);
-    },
-    
-    // Event for when update todo button is click
-    updateTodoClickEvent(e) {
-        const id = e.currentTarget.dataset.id;
-        const taskName = document.getElementById('taskName').value;
-        const priority = document.getElementById('taskPriority').value;
-        const dueDate = document.getElementById('dueDate').value;
-        const description = document.getElementById('description').value;
-        controller.handleUpdateTodoClick(id, taskName, priority, dueDate, description);
+        // Create and pass "create" command
+        const parameters = {taskName: taskName, priority: priority, dueDate: dueDate, description: description};
+        const command = commandFactory("create", parameters);
+        controller.handleCommand(command);
     },
 
     // Event for when read todo event is fired
     readTodoClickEvent(e) {
-        controller.handleReadTodoClick(e);
+        // Create and pass "read" command
+        const index = e.currentTarget.dataset.index;
+        const parameters = {index: index};
+        const command = commandFactory("read", parameters);
+        controller.handleCommand(command);
+    },
+
+    // Event for when update todo event is fired
+    updateTodoClickEvent(e) {
+        const index = e.currentTarget.dataset.index;
+        const taskName = document.getElementById('taskName').value;
+        const priority = document.getElementById('taskPriority').value;
+        const dueDate = document.getElementById('dueDate').value;
+        const description = document.getElementById('description').value;
+        // Create and pass "create" command
+        const parameters = {index: index, taskName: taskName, priority: priority, dueDate: dueDate, description: description};
+        const command = commandFactory("update", parameters);
+        controller.handleCommand(command);
     },
 
     // Event for when delete todo button is clicked
     deleteTodoClickEvent(e) {
         e.stopPropagation();
-        controller.handleDeleteTodoClick(e);
+        // Create and pass "delete" event
+        const index = e.currentTarget.dataset.index;
+        const parameters = {index: index};
+        const command = commandFactory("delete", parameters);
+        controller.handleCommand(command);
     },
 
     // Event for when open modal button is clicked

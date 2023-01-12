@@ -3,40 +3,33 @@ import view from './view.js';
 
 // CONTROLLER
 const controller = {
-    // Sends request to add Todo
-    createTodoReq(taskName, priority, dueDate, description) {
-        model.createTodo(defaultProject, taskName, priority, dueDate, description);
+    // Forwards commands to model
+    handleCommand(command) {
+        model.handleCommand(command);
     },
 
-    // Sends request to delete Todo
-    deleteTodoReq(id) {
-        model.deleteTodo(defaultProject, id);
-    },
-
-    // Handles create todo click event
-    handleCreateTodoClick(taskName, priority, dueDate, description) {
-        model.createTodo(defaultProject, taskName, priority, dueDate, description);
-        view.closeModal();
-    },
-
-    // Handle read todo click event
-    handleReadTodoClick(e) {
-        const readTodo = model.readTodo(defaultProject, e.currentTarget.dataset.id);
-        // Populates modal with correct info and opens it
-        view.addDataModal(readTodo.taskName, readTodo.priority, readTodo.dueDate, readTodo.description);
-        view.setModalButtonBehavior("update", e.currentTarget.dataset.id);
+    // Handles request to open modal
+    openModalReq() {
         view.openModal();
     },
-    
-    // Handle update todo click event
-    handleUpdateTodoClick(id, taskName, priority, dueDate, description) {
-        model.updateTodo(undefined, id, taskName, priority, dueDate, description);
-        view.closeModal();
+
+    setModalMode(mode, index) {
+        view.setModalButtonBehavior("update", index);
     },
 
-    // Handle delete todo click event
-    handleDeleteTodoClick(e) {
-        model.deleteTodo(defaultProject, e.target.dataset.id);
+    // Handles request to inject data into modal
+    addDataModalReq(todo) {
+        let taskName = todo.taskName;
+        let priority = todo.priority;
+        let dueDate = todo.dueDate;
+        let description = todo.description;
+        view.addDataModal(taskName, priority, dueDate, description);
+        view.openModal();
+    },
+
+    // Handles request to close modal
+    closeModalReq() {
+        view.closeModal();
     },
 
     // Handles open modal click event

@@ -17,34 +17,60 @@ const model = {
         return { id, taskName, priority, dueDate, description };
     },
 
+    // Handles commands
+    handleCommand(command) {
+        if (command.commandType === "create") {
+            this.createTodo(undefined, command.parameters);
+            controller.closeModalReq();
+        }
+        if (command.commandType === "read") {
+            const todo = this.readTodo(undefined, command.parameters);
+            controller.addDataModalReq(todo);
+            controller.setModalMode("update", command.parameters.index);
+        }
+        if (command.commandType === "update") {
+            this.updateTodo(undefined, command.parameters);
+            controller.closeModalReq();
+        }
+        if (command.commandType === "delete") {
+            this.deleteTodo(undefined, command.parameters);
+        }
+    },
+
     // Create todo
-    createTodo(project = defaultProject, taskName, priority, dueDate = '', description) {
+    createTodo(project = defaultProject, parameters) {
+        let taskName = parameters.taskName;
+        if (!taskName) { taskName = "Default Name"};
+        let priority = parameters.priority;
+        let dueDate = parameters.dueDate;
+        let description = parameters.description;
+        if (!description) { description = "Default Description"};
         const todo = model.todoFactory(project.listItems.length, taskName, priority, dueDate, description);
         project.listItems.push(todo);
         controller.refreshViewTodosReq(defaultProject);
     },
 
     // Read todo
-    readTodo(project = defaultProject, id) {
-        const todo = project.listItems.find(matchTodo => matchTodo.id == id);
+    readTodo(project = defaultProject, parameters) {
+        const todo = project.listItems[parameters.index];
         return todo;
     },
 
     // Update todo
-    updateTodo(project = defaultProject, id, newName, newPrio, newDate, newDesc) {
+    updateTodo(project = defaultProject, parameters) {
         // Finds todo with correct id and edits values
-        const todo = project.listItems.find(matchTodo => matchTodo.id == id);
-        if (newName != undefined) { todo.taskName = newName }
-        if (newPrio != undefined) { todo.priority = newPrio }
-        if (newDate != undefined) { todo.dueDate = newDate }
-        if (newDesc != undefined) { todo.description = newDesc }
+        const todo = project.listItems[parameters.index];
+        if (parameters.taskName != undefined) { todo.taskName = parameters.taskName }
+        if (parameters.priority != undefined) { todo.priority = parameters.priority }
+        if (parameters.dueDate != undefined) { todo.dueDate = parameters.dueDate }
+        if (parameters.description != undefined) { todo.description = parameters.description }
         controller.refreshViewTodosReq(defaultProject);
     },
 
     // Delete todo
-    deleteTodo(project = defaultProject, id) {
-        // Finds todo with correct id and deletes it
-        const index = project.listItems.findIndex(todo => todo.id == id);
+    deleteTodo(project = defaultProject, parameters) {
+        // Finds todo with correct index and deletes it
+        let index = parameters.index;
         if (index > -1) { project.listItems.splice(index, 1) }
         // Remaps ids for index
         project.listItems.forEach((todo, i) => {
