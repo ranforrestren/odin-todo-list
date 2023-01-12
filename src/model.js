@@ -32,7 +32,7 @@ const model = {
             controller.setModalMode("update", command.parameters.index);
         }
         if (command.commandType === "update") {
-            this.updateTodo(undefined, command.parameters);
+            this.updateTodo(undefined, command);
             controller.closeModalReq();
         }
         if (command.commandType === "delete") {
@@ -41,7 +41,7 @@ const model = {
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
             this.undoCommand(lastCommand);
-        } else {
+        } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
         }
     },
@@ -56,7 +56,7 @@ const model = {
         if (!description) { description = "Default Description"};
         const todo = model.todoFactory(project.listItems.length, taskName, priority, dueDate, description);
         if (command.parameters.index) {
-            project.listItems.splice(command.parameters.index, 0, todo)
+            project.listItems.splice(command.parameters.index, 0, todo);
         } else {
             command.parameters.index = project.listItems.push(todo) - 1;
         }
@@ -70,13 +70,23 @@ const model = {
     },
 
     // Update todo
-    updateTodo(project = defaultProject, parameters) {
-        // Finds todo with correct id and edits values
-        const todo = project.listItems[parameters.index];
-        if (parameters.taskName != undefined) { todo.taskName = parameters.taskName }
-        if (parameters.priority != undefined) { todo.priority = parameters.priority }
-        if (parameters.dueDate != undefined) { todo.dueDate = parameters.dueDate }
-        if (parameters.description != undefined) { todo.description = parameters.description }
+    updateTodo(project = defaultProject, command) {
+        // Finds todo with correct id
+        const todo = project.listItems[command.parameters.index];
+        // Saves info to allow reversal later
+        const oldTodo = {};
+        for (const property in todo) {
+            oldTodo[property] = todo[property];
+        }
+        // Edits values
+        if (command.parameters.taskName != undefined) { todo.taskName = command.parameters.taskName }
+        if (command.parameters.priority != undefined) { todo.priority = command.parameters.priority }
+        if (command.parameters.dueDate != undefined) { todo.dueDate = command.parameters.dueDate }
+        if (command.parameters.description != undefined) { todo.description = command.parameters.description }
+        // Reinjects info into command to allow reversal
+        for (const property in oldTodo) {
+            command.parameters[property] = oldTodo[property];
+        }
         controller.refreshViewTodosReq(defaultProject);
     },
 
@@ -103,13 +113,16 @@ const model = {
     undoCommand(command) {
         if (command) {
             if (command.commandType === "create") {
-                this.deleteTodo(undefined, command)
+                this.deleteTodo(undefined, command);
             }
             if (command.commandType === "delete") {
-                this.createTodo(undefined, command)
+                this.createTodo(undefined, command);
+            }
+            if (command.commandType === "update") {
+                this.updateTodo(undefined, command);
             }
         } else {
-        alert("THERE ARE NO COMMANDS TO UNDO")
+        alert("THERE ARE NO COMMANDS TO UNDO");
         }
     }
 }
