@@ -176,7 +176,7 @@ const view = {
 
 // Setup event listeners
 openModalButton.addEventListener('click', view.openModalClickEvent);
-overlay.addEventListener('click', view.closeModalClickEvent);
+overlay.addEventListener('mousedown', view.closeModalClickEvent);
 undoButton.addEventListener('click', view.undoClickEvent);
 
 export default view;
