@@ -12,7 +12,7 @@ const defaultProject = projectFactory('default', 'white');
 // MODEL CONTROLLER
 const model = {
     // ID counter (replace with UUID later?)
-    idCounter: 0,
+    idCounter: 1,
 
     // Constructor for List objects
     todoFactory(taskName, priority, dueDate, description) {
@@ -42,6 +42,7 @@ const model = {
         }
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
+            console.log(lastCommand);
             this.undoCommand(lastCommand);
         } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
@@ -64,7 +65,6 @@ const model = {
             const index = project.listItems.findIndex(todo => todo.id > command.parameters.id );
             project.listItems.splice(index, 0, todo);
         } else {
-
             todo.id = this.idCounter++;
             command.parameters.id = todo.id;
             project.listItems.push(todo);
