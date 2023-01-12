@@ -36,7 +36,7 @@ const model = {
             controller.closeModalReq();
         }
         if (command.commandType === "delete") {
-            this.deleteTodo(undefined, command.parameters);
+            this.deleteTodo(undefined, command);
         }
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
@@ -55,7 +55,11 @@ const model = {
         let description = command.parameters.description;
         if (!description) { description = "Default Description"};
         const todo = model.todoFactory(project.listItems.length, taskName, priority, dueDate, description);
-        command.parameters.index = project.listItems.push(todo) - 1;
+        if (command.parameters.index) {
+            project.listItems.splice(command.parameters.index, 0, todo)
+        } else {
+            command.parameters.index = project.listItems.push(todo) - 1;
+        }
         controller.refreshViewTodosReq(defaultProject);
     },
 
@@ -77,10 +81,16 @@ const model = {
     },
 
     // Delete todo
-    deleteTodo(project = defaultProject, parameters) {
+    deleteTodo(project = defaultProject, command) {
         // Finds todo with correct index and deletes it
-        let index = parameters.index;
-        if (index > -1) { project.listItems.splice(index, 1) }
+        let index = command.parameters.index;
+        if (index > -1) { 
+            // But not before copying the todo info to allow reversal later...
+            const todo = (project.listItems.splice(index, 1))[0];
+            for (const property in todo) {
+                command.parameters[property] = todo[property];
+            }
+        }
         // Remaps ids for index
         project.listItems.forEach((todo, i) => {
             todo.id = i;
@@ -92,9 +102,11 @@ const model = {
     // Undoes last command
     undoCommand(command) {
         if (command) {
-            // just testing!
             if (command.commandType === "create") {
-                this.deleteTodo(undefined, command.parameters)
+                this.deleteTodo(undefined, command)
+            }
+            if (command.commandType === "delete") {
+                this.createTodo(undefined, command)
             }
         } else {
         alert("THERE ARE NO COMMANDS TO UNDO")
