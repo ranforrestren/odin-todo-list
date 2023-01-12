@@ -60,7 +60,7 @@ body, input, textarea {
 
 .todoItem .priority {
     width: 20px;
-    height: 80px;
+    height: 100%;
     border-radius: 20px 0px 0px 20px;
     background: rgba(180, 180, 180, 0.8);
 }
@@ -97,6 +97,14 @@ body, input, textarea {
     white-space: nowrap;
     font-size: 1rem;
     width: 340px;
+}
+
+.deleteAnimation {
+    animation: zoom reverse 0.7s forwards 1 ease-out;
+}
+
+.createAnimation {
+    animation: zoom normal 0.7s forwards 1 ease-out;
 }
 
 #buttonBar {
@@ -210,4 +218,20 @@ body, input, textarea {
 ::-webkit-scrollbar-thumb {
     background: rgba(180, 180, 180, 0.8);
     border-radius: 10px;
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+        transform-origin: 50% 25%;
+        height: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 0rem;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
