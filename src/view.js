@@ -13,6 +13,7 @@ const descriptionInput = document.querySelector('#description');
 
 const openModalButton = document.querySelector('#openModalButton');
 const modalButton = document.querySelector('#modalButton');
+const undoButton = document.querySelector('#undoButton');
 
 // Setup default date for inputs (Can move into own function in refactor?)
 const date = new Date();
@@ -142,13 +143,20 @@ const view = {
         controller.handleCommand(command);
     },
 
-    // Event for when delete todo button is clicked
+    // Event for when delete todo event is fired
     deleteTodoClickEvent(e) {
         e.stopPropagation();
-        // Create and pass "delete" event
+        // Create and pass "delete" command
         const index = e.currentTarget.dataset.index;
         const parameters = {index: index};
         const command = commandFactory("delete", parameters);
+        controller.handleCommand(command);
+    },
+
+    // Event for when undo event is fired
+    undoClickEvent() {
+        // Create and pass "undo" command
+        const command = commandFactory("undo", undefined);
         controller.handleCommand(command);
     },
 
@@ -169,5 +177,6 @@ const view = {
 // Setup event listeners
 openModalButton.addEventListener('click', view.openModalClickEvent);
 overlay.addEventListener('click', view.closeModalClickEvent);
+undoButton.addEventListener('click', view.undoClickEvent);
 
 export default view;

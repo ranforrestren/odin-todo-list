@@ -5,6 +5,7 @@ import view from './view.js';
 const controller = {
     // Forwards commands to model
     handleCommand(command) {
+        console.log(command);
         model.handleCommand(command);
     },
 
