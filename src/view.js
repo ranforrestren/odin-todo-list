@@ -37,9 +37,9 @@ const view = {
         todoDescription.classList.add('description');
         const todoDeleteButton = document.createElement('button');
         todoDeleteButton.classList.add('button', 'delete');
-        // Add index data-attribute to elements
-        todoElement.setAttribute('data-index', id);
-        todoDeleteButton.setAttribute('data-index', id);
+        // Add id data-attribute to elements
+        todoElement.setAttribute('data-id', id);
+        todoDeleteButton.setAttribute('data-id', id);
         // Adds event handler for deleting todo
         todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
         // Adds event handler for opening todo
@@ -98,7 +98,7 @@ const view = {
         else if (mode === "update") {
             modalButton.setAttribute("data-mode", "update");
             modalButton.textContent = "Update";
-            modalButton.setAttribute('data-index', id);
+            modalButton.setAttribute('data-id', id);
             modalButton.addEventListener('click', this.updateTodoClickEvent);
         }
     },
@@ -124,21 +124,21 @@ const view = {
     // Event for when read todo event is fired
     readTodoClickEvent(e) {
         // Create and pass "read" command
-        const index = e.currentTarget.dataset.index;
-        const parameters = {index: index};
+        const id = e.currentTarget.dataset.id;
+        const parameters = {id: id};
         const command = commandFactory("read", parameters);
         controller.handleCommand(command);
     },
 
     // Event for when update todo event is fired
     updateTodoClickEvent(e) {
-        const index = e.currentTarget.dataset.index;
+        const id = e.currentTarget.dataset.id;
         const taskName = document.getElementById('taskName').value;
         const priority = document.getElementById('taskPriority').value;
         const dueDate = document.getElementById('dueDate').value;
         const description = document.getElementById('description').value;
         // Create and pass "create" command
-        const parameters = {index: index, taskName: taskName, priority: priority, dueDate: dueDate, description: description};
+        const parameters = {id: id, taskName: taskName, priority: priority, dueDate: dueDate, description: description};
         const command = commandFactory("update", parameters);
         controller.handleCommand(command);
     },
@@ -147,8 +147,8 @@ const view = {
     deleteTodoClickEvent(e) {
         e.stopPropagation();
         // Create and pass "delete" command
-        const index = e.currentTarget.dataset.index;
-        const parameters = {index: index};
+        const id = e.currentTarget.dataset.id;
+        const parameters = {id: id};
         const command = commandFactory("delete", parameters);
         controller.handleCommand(command);
     },

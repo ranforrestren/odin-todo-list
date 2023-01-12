@@ -11,10 +11,12 @@ const defaultProject = projectFactory('default', 'white');
 
 // MODEL CONTROLLER
 const model = {
+    // ID counter (replace with UUID later?)
+    idCounter: 0,
 
     // Constructor for List objects
-    todoFactory(id, taskName, priority, dueDate, description) {
-        return { id, taskName, priority, dueDate, description };
+    todoFactory(taskName, priority, dueDate, description) {
+        return { taskName, priority, dueDate, description };
     },
 
     // Que for holding previous done commands
@@ -27,9 +29,9 @@ const model = {
             controller.closeModalReq();
         }
         if (command.commandType === "read") {
-            const todo = this.readTodo(undefined, command.parameters);
+            const todo = this.readTodo(undefined, command);
             controller.addDataModalReq(todo);
-            controller.setModalMode("update", command.parameters.index);
+            controller.setModalMode("update", command.parameters.id);
         }
         if (command.commandType === "update") {
             this.updateTodo(undefined, command);
@@ -44,6 +46,7 @@ const model = {
         } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
         }
+        console.log(defaultProject.listItems);
     },
 
     // Create todo
@@ -54,25 +57,32 @@ const model = {
         let dueDate = command.parameters.dueDate;
         let description = command.parameters.description;
         if (!description) { description = "Default Description"};
-        const todo = model.todoFactory(project.listItems.length, taskName, priority, dueDate, description);
-        if (command.parameters.index) {
-            project.listItems.splice(command.parameters.index, 0, todo);
+        const todo = model.todoFactory(taskName, priority, dueDate, description);
+        // Check if there is an ID (undo operation), if not then assign ID
+        if (command.parameters.id) {
+            todo.id = command.parameters.id;
+            const index = project.listItems.findIndex(todo => todo.id > command.parameters.id );
+            project.listItems.splice(index, 0, todo);
         } else {
-            command.parameters.index = project.listItems.push(todo) - 1;
+
+            todo.id = this.idCounter++;
+            command.parameters.id = todo.id;
+            project.listItems.push(todo);
         }
         controller.refreshViewTodosReq(defaultProject);
     },
 
     // Read todo
-    readTodo(project = defaultProject, parameters) {
-        const todo = project.listItems[parameters.index];
+    readTodo(project = defaultProject, command) {
+        const todo = project.listItems.find(todo => todo.id == command.parameters.id);
+        console.log(todo);
         return todo;
     },
 
     // Update todo
     updateTodo(project = defaultProject, command) {
         // Finds todo with correct id
-        const todo = project.listItems[command.parameters.index];
+        const todo = project.listItems.find(todo => todo.id == command.parameters.id);
         // Saves info to allow reversal later
         const oldTodo = {};
         for (const property in todo) {
@@ -93,7 +103,7 @@ const model = {
     // Delete todo
     deleteTodo(project = defaultProject, command) {
         // Finds todo with correct index and deletes it
-        let index = command.parameters.index;
+        const index = project.listItems.findIndex(todo => todo.id == command.parameters.id);
         if (index > -1) { 
             // But not before copying the todo info to allow reversal later...
             const todo = (project.listItems.splice(index, 1))[0];
@@ -101,10 +111,6 @@ const model = {
                 command.parameters[property] = todo[property];
             }
         }
-        // Remaps ids for index
-        project.listItems.forEach((todo, i) => {
-            todo.id = i;
-        })
         // Sends request to refresh todo list
         controller.refreshViewTodosReq(defaultProject);
     },

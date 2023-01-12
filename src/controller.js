@@ -5,7 +5,6 @@ import view from './view.js';
 const controller = {
     // Forwards commands to model
     handleCommand(command) {
-        console.log(command);
         model.handleCommand(command);
     },
 
@@ -14,8 +13,8 @@ const controller = {
         view.openModal();
     },
 
-    setModalMode(mode, index) {
-        view.setModalButtonBehavior("update", index);
+    setModalMode(mode, id) {
+        view.setModalButtonBehavior("update", id);
     },
 
     // Handles request to inject data into modal
