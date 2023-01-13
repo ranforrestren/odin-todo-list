@@ -78,7 +78,7 @@ const view = {
             const afterNode = root.querySelector(`[data-id="${indexID}"`);
             root.insertBefore(todoElement, afterNode);
         } else {
-        root.appendChild(todoElement);
+            root.appendChild(todoElement);
         }
     },
 
@@ -105,6 +105,7 @@ const view = {
         const todoElement = root.querySelector(`[data-id="${id}"`);
         // Attaches delete animation
         todoElement.classList.add('deleteAnimation');
+        todoElement.classList.remove("updatePlayable");
     },
 
     // Updates entire todo list
@@ -137,7 +138,7 @@ const view = {
         overlay.classList.add('hidden');
         modal.classList.add('hidden');
     },
-    
+
     // Sets behavior modal button to add / edit
     setModalButtonBehavior(mode, id) {
         this.removeModalButtonListeners();
@@ -167,18 +168,22 @@ const view = {
         const dueDate = document.getElementById('dueDate').value;
         const description = document.getElementById('description').value;
         // Create and pass "create" command
-        const parameters = {taskName: taskName, priority: priority, dueDate: dueDate, description: description};
+        const parameters = { taskName: taskName, priority: priority, dueDate: dueDate, description: description };
         const command = commandFactory("create", parameters);
         controller.handleModelCommand(command);
     },
 
     // Event for when read todo event is fired
     readTodoClickEvent(e) {
-        // Create and pass "read" command
-        const id = e.currentTarget.dataset.id;
-        const parameters = {id: id};
-        const command = commandFactory("read", parameters);
-        controller.handleModelCommand(command);
+        // Make sure text is not being selected
+        let selection = window.getSelection();
+        if (selection.type != "Range") {
+            // Create and pass "read" command
+            const id = e.currentTarget.dataset.id;
+            const parameters = { id: id };
+            const command = commandFactory("read", parameters);
+            controller.handleModelCommand(command);
+        }
     },
 
     // Event for when update todo event is fired
@@ -189,7 +194,7 @@ const view = {
         const dueDate = document.getElementById('dueDate').value;
         const description = document.getElementById('description').value;
         // Create and pass "create" command
-        const parameters = {id: id, taskName: taskName, priority: priority, dueDate: dueDate, description: description};
+        const parameters = { id: id, taskName: taskName, priority: priority, dueDate: dueDate, description: description };
         const command = commandFactory("update", parameters);
         controller.handleModelCommand(command);
     },
@@ -199,7 +204,7 @@ const view = {
         e.stopPropagation();
         // Create and pass "delete" command
         const id = e.currentTarget.dataset.id;
-        const parameters = {id: id};
+        const parameters = { id: id };
         const command = commandFactory("delete", parameters);
         controller.handleModelCommand(command);
     },
@@ -208,6 +213,7 @@ const view = {
     animationEndEvent(e) {
         if (e.animationName === "zoomCreate") {
             e.currentTarget.classList.remove("createAnimation");
+            e.currentTarget.classList.add("updatePlayable");
         } else if (e.animationName === "shakeUpdate") {
             e.currentTarget.classList.remove("updateAnimation");
         } else if (e.animationName === "zoomDelete") {
@@ -233,7 +239,7 @@ const view = {
         if (e.target === this) {
             controller.handleCloseModalClick();
         }
-    }, 
+    },
 }
 
 // Setup event listeners
