@@ -67,12 +67,12 @@ const model = {
     // Create project
     createProject(command) {
         let projName = command.parameters.projName;
-        const project = projectFactory(this.projIdCounter, projName, "white");
+        let color = command.parameters.color;
+        const project = projectFactory(this.projIdCounter, projName, color);
         projectHolder.push(project);
         this.projIdCounter++;
         command.parameters.id = project.id;
         command.parameters.projName = project.projectName;
-        command.parameters.color = project.colorTag;
         controller.handleViewCommand(command);
         console.log(project);
     },

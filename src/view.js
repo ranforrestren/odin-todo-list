@@ -45,6 +45,7 @@ const view = {
             this.createProject(id, projName, color);
         }
         if (command.commandType === "readProj") {
+            this.readProject(id);
             todoBar.replaceChildren();
         }
     },
@@ -81,6 +82,14 @@ const view = {
         // Adds todo to the DOM
         projElement.append(projColorTag, projName, projDeleteButton);
         projBar.appendChild(projElement);
+    },
+
+    // Reads project item
+    readProject(id) {
+        // Tags all required elements of the project item
+        const projElement = projBar.querySelector(`[data-id="${id}"`);
+        // Adds update animation
+        projElement.classList.add('updateAnimation');
     },
 
     // Creates todo item

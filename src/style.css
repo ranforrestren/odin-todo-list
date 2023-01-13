@@ -57,6 +57,38 @@ body, input, textarea {
     background: rgba(180, 180, 180, 0.8);
 }
 
+.projectItem .colorTag[data-color="red"] {
+    background-color: #ef4444;
+}
+
+.projectItem .colorTag[data-color="orange"] {
+    background-color: #f97316;
+}
+
+.projectItem .colorTag[data-color="yellow"] {
+    background-color: #facc15;
+}
+
+.projectItem .colorTag[data-color="green"] {
+    background-color: #4ade80;
+}
+
+.projectItem .colorTag[data-color="cyan"] {
+    background-color: #22d3ee;
+}
+
+.projectItem .colorTag[data-color="blue"] {
+    background-color: #3b82f6;
+}
+
+.projectItem .colorTag[data-color="purple"] {
+    background-color: #a855f7;
+}
+
+.projectItem .colorTag[data-color="pink"] {
+    background-color: #fb7185;
+}
+
 .projectItem .name {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -105,18 +137,6 @@ body, input, textarea {
     height: 100%;
     border-radius: 20px 0px 0px 20px;
     background: rgba(180, 180, 180, 0.8);
-}
-
-.todoItem .priority[data-priority="High"] {
-    background-color: #f87171;
-}
-
-.todoItem .priority[data-priority="Medium"] {
-    background-color: #fcd34d;
-}
-
-.todoItem .priority[data-priority="Low"] {
-    background-color: #bef264;
 }
 
 .todoItem .name {
@@ -258,12 +278,12 @@ body, input, textarea {
 }
 
 ::-webkit-scrollbar-track {
-    border: solid 2px rgba(200, 200, 200, 0.8);
+    border: solid 2px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-  }
+}
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(180, 180, 180, 0.8);
+    background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
