@@ -12,6 +12,7 @@ const dueDateInput = document.querySelector('#dueDate');
 const priorityInput = document.querySelector('#taskPriority');
 const descriptionInput = document.querySelector('#description');
 
+const createProjectButton = document.querySelector('#createProjectButton');
 const openModalButton = document.querySelector('#openModalButton');
 const modalButton = document.querySelector('#modalButton');
 const undoButton = document.querySelector('#undoButton');
@@ -69,9 +70,7 @@ const view = {
         //todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
 
         // Adds event handler for opening proj
-
         projElement.addEventListener('click', this.readProjClickEvent);
-
         // Adds event handler for when animation ends
         projElement.addEventListener('animationend', this.animationEndEvent);
         // Sets correct color tag data attribute
@@ -81,7 +80,7 @@ const view = {
         projDeleteButton.textContent = 'X';
         // Adds todo to the DOM
         projElement.append(projColorTag, projName, projDeleteButton);
-        projBar.appendChild(projElement);
+        projBar.insertBefore(projElement, createProjectButton);
     },
 
     // Reads project item
@@ -205,6 +204,14 @@ const view = {
         modalButton.removeEventListener('click', this.updateTodoClickEvent);
     },
 
+    // Event for when create proj event is fired
+    createProjectClickEvent() {
+        // Create and pass "create" command
+        const parameters = {projName:"New Project", color:""};
+        const command = commandFactory("createProj", parameters);
+        controller.handleModelCommand(command);
+    },
+
     // Event for when read proj event is fired
     readProjClickEvent(e) {
         // Make sure text is not being selected
@@ -300,6 +307,7 @@ const view = {
 }
 
 // Setup event listeners
+createProjectButton.addEventListener('click', view.createProjectClickEvent);
 openModalButton.addEventListener('click', view.openModalClickEvent);
 overlay.addEventListener('mousedown', view.closeModalClickEvent);
 undoButton.addEventListener('click', view.undoClickEvent);

@@ -74,16 +74,13 @@ const model = {
         command.parameters.id = project.id;
         command.parameters.projName = project.projectName;
         controller.handleViewCommand(command);
-        console.log(project);
     },
 
     // Read (change) project
     readProject(command) {
         const project = projectHolder.find(project => project.id == command.parameters.id);
-        console.log(project);
         controller.handleViewCommand(command);
         for (const todo of project.listItems) {
-            console.log(todo);
             const id = todo.id;
             const taskName = todo.taskName;
             const priority = todo.priority;
@@ -91,7 +88,6 @@ const model = {
             const description = todo.description;
             const command = commandFactory("create", {id, taskName, priority, dueDate, description});
             controller.handleViewCommand(command);
-            console.log("TESTED!");
         }
         command.parameters.id = this.currentProject.id;
         this.currentProject = project;

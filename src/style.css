@@ -34,8 +34,7 @@ body, input, textarea {
     flex-direction: column;
     overflow: hidden auto;
     height: 720px;
-    padding-right: 20px;
-    padding-bottom: 20px;
+    padding: 5px 20px 20px 0px;
     gap: 20px;
 }
 
@@ -48,6 +47,10 @@ body, input, textarea {
     border-radius: 20px;
     background-color: white;
     box-shadow: 0px 5px 3px 3px rgba(122,122,122,0.2);
+}
+
+.projectItem.updatePlayable:hover {
+    animation: tiltRead 0.4s forwards 1 ease-in;
 }
 
 .projectItem .colorTag {
@@ -70,7 +73,7 @@ body, input, textarea {
 }
 
 .projectItem .colorTag[data-color="green"] {
-    background-color: #4ade80;
+    background-color: #a3e635;
 }
 
 .projectItem .colorTag[data-color="cyan"] {
@@ -97,6 +100,19 @@ body, input, textarea {
     width: 180px;
 }
 
+#createProjectButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: auto;
+    margin-left: 40px;
+    border: 4px dotted white;
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0);
+    box-shadow: 0px 5px 3px rgba(122,122,122,0.2);
+}
+
 #todoWrapper{
     box-sizing: border-box;
     height: 800px;
@@ -111,8 +127,7 @@ body, input, textarea {
     display: flex;
     flex-direction: column;
     height: 720px;
-    padding-right: 20px;
-    padding-bottom: 20px;
+    padding: 5px 20px 20px 0px;
     gap: 20px;
     overflow: hidden auto;
 }
@@ -137,6 +152,18 @@ body, input, textarea {
     height: 100%;
     border-radius: 20px 0px 0px 20px;
     background: rgba(180, 180, 180, 0.8);
+}
+
+.todoItem .priority[data-priority="High"] {
+    background-color: #ef4444;
+}
+
+.todoItem .priority[data-priority="Medium"] {
+    background-color: #facc15;
+}
+
+.todoItem .priority[data-priority="Low"] {
+    background-color: #a3e635;
 }
 
 .todoItem .name {
@@ -307,7 +334,6 @@ body, input, textarea {
 @keyframes tiltRead {
     100% {
         transform: scale(1.03);
-        margin-top: 10px;
         margin-bottom: 10px;
     }
 }
