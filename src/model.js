@@ -42,13 +42,10 @@ const model = {
         }
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
-            console.log(lastCommand);
             this.undoCommand(lastCommand);
         } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
         }
-        console.log(defaultProject.listItems);
-        console.log(this.commandQueue);
     },
 
     // Create todo
@@ -78,14 +75,12 @@ const model = {
             project.listItems.push(todo);
         }
         // Sends a command for creating the DOM element visually
-        console.log(command);
         controller.handleViewCommand(command);
     },
 
     // Read todo
     readTodo(project = defaultProject, command) {
         const todo = project.listItems.find(todo => todo.id == command.parameters.id);
-        console.log(todo);
         return todo;
     },
 
@@ -103,11 +98,12 @@ const model = {
         if (command.parameters.priority != undefined) { todo.priority = command.parameters.priority }
         if (command.parameters.dueDate != undefined) { todo.dueDate = command.parameters.dueDate }
         if (command.parameters.description != undefined) { todo.description = command.parameters.description }
+        // Sends a command for updating the DOM element visually
+        controller.handleViewCommand(command);
         // Reinjects info into command to allow reversal
         for (const property in oldTodo) {
             command.parameters[property] = oldTodo[property];
         }
-        controller.refreshViewTodosReq(defaultProject);
     },
 
     // Delete todo
@@ -122,7 +118,7 @@ const model = {
                 command.parameters[property] = todo[property];
             }
         }
-        // Sends request to refresh todo list\
+        // Sends a command for deleting the DOM element visually
         controller.handleViewCommand(command);
     },
 

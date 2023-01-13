@@ -24,18 +24,16 @@ const view = {
     // Handles commands
     handleCommand(command) {
         let id = command.parameters.id;
-        console.log("COMMAND IS:");
-        console.log(command);
+        let taskName = command.parameters.taskName;
+        let priority = command.parameters.priority;
+        let dueDate = command.parameters.dueDate;
+        let description = command.parameters.description;
         if (command.commandType === "create") {
-            let taskName = command.parameters.taskName;
-            let priority = command.parameters.priority;
-            let dueDate = command.parameters.dueDate;
-            let description = command.parameters.description;
             let indexID = command.parameters.indexID;
             this.createTodo(id, taskName, priority, dueDate, description, indexID);
         }
         if (command.commandType === "update") {
-            console.log("UPDATE COMMAND");
+            this.updateTodo(id, taskName, priority, dueDate, description);
         }
         if (command.commandType === "delete") {
             this.deleteTodo(id);
@@ -82,6 +80,23 @@ const view = {
         } else {
         root.appendChild(todoElement);
         }
+    },
+
+    // Updates todo item
+    updateTodo(id, taskName, priority, dueDate, description) {
+        // Tags all required elements of the todo item
+        const todoElement = root.querySelector(`[data-id="${id}"`);
+        const todoPriority = todoElement.querySelector('.priority');
+        const todoName = todoElement.querySelector('.name');
+        const todoDueDate = todoElement.querySelector('.dueDate');
+        const todoDescription = todoElement.querySelector('.description');
+        // Injects new values to elements
+        todoPriority.setAttribute("data-priority", priority);
+        todoName.textContent = taskName;
+        todoDueDate.textContent = dueDate;
+        todoDescription.textContent = description;
+        // Adds update animation
+        todoElement.classList.add('updateAnimation');
     },
 
     // Deletes todo item
@@ -193,6 +208,8 @@ const view = {
     animationEndEvent(e) {
         if (e.animationName === "zoomCreate") {
             e.currentTarget.classList.remove("createAnimation");
+        } else if (e.animationName === "shakeUpdate") {
+            e.currentTarget.classList.remove("updateAnimation");
         } else if (e.animationName === "zoomDelete") {
             e.currentTarget.remove();
         }
