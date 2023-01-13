@@ -194,7 +194,7 @@ body, input, textarea {
 
 .updateAnimation p{
     position: relative;
-    animation: shakeUpdate 1.1s 1;
+    animation: shakeUpdate 0.8s 1;
 }
 
 .deleteAnimation {

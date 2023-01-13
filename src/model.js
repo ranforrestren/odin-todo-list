@@ -57,7 +57,6 @@ const model = {
             this.readProject(command);
         }
         if (command.commandType === "deleteProj") {
-            console.log(projectHolder);
             this.deleteProject(command);
         }
         if (command.commandType === "undo") {
@@ -66,8 +65,6 @@ const model = {
         } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
         }
-        console.log(this.commandQueue);
-        console.log(projectHolder);
     },
     
     // Create project

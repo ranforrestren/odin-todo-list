@@ -23,7 +23,7 @@ model.handleCommand(command6);
 model.handleCommand(command7);
 model.handleCommand(command8);
 
-const command9 = commandFactory("readProj", {id: 2});
+const command9 = commandFactory("readProj", {id: 1});
 model.handleCommand(command9);
 
 model.handleCommand( commandFactory("create", {taskName:"Test1", priority:"High", dueDate:currentDate, description:"Test Description 1"}));
@@ -38,3 +38,54 @@ model.handleCommand( commandFactory("create", {taskName:"Test9", priority:"Low",
 model.handleCommand( commandFactory("create", {taskName:"Test10", priority:"Default", dueDate:currentDate, description:"Test Description 10"}));
 model.handleCommand( commandFactory("create", {taskName:"Test11", priority:"Default", dueDate:currentDate, description:"Test Description 11"}));
 model.handleCommand( commandFactory("create", {taskName:"Test12", priority:"Low", dueDate:currentDate, description:"Test Description 12"}));
+
+const command10 = commandFactory("readProj", {id: 2});
+model.handleCommand(command10);
+
+model.handleCommand( commandFactory("create", {taskName:"Test13", priority:"High", dueDate:currentDate, description:"Test Description 13"}));
+model.handleCommand( commandFactory("create", {taskName:"Test14", priority:"Medium", dueDate:currentDate, description:"Test Description 14"}));
+model.handleCommand( commandFactory("create", {taskName:"Test15", priority:"Low", dueDate:currentDate, description:"Test Description 15"}));
+
+const command11 = commandFactory("readProj", {id: 3});
+model.handleCommand(command11);
+
+model.handleCommand( commandFactory("create", {taskName:"Test16", priority:"Low", dueDate:currentDate, description:"Test Description 16"}));
+model.handleCommand( commandFactory("create", {taskName:"Test17", priority:"Low", dueDate:currentDate, description:"Test Description 17"}));
+model.handleCommand( commandFactory("create", {taskName:"Test18", priority:"Low", dueDate:currentDate, description:"Test Description 18"}));
+
+const command12 = commandFactory("readProj", {id: 4});
+model.handleCommand(command12);
+
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+
+const command13 = commandFactory("readProj", {id: 5});
+model.handleCommand(command13);
+
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+
+const command14 = commandFactory("readProj", {id: 6});
+model.handleCommand(command14);
+
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+
+const command15 = commandFactory("readProj", {id: 7});
+model.handleCommand(command15);
+
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+
+const command16 = commandFactory("readProj", {id: 8});
+model.handleCommand(command16);
+
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
+
+model.handleCommand(command9);
