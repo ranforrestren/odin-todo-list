@@ -131,11 +131,17 @@ const model = {
     // Create todo
     createTodo(project = defaultProject, command) {
         let taskName = command.parameters.taskName;
-        if (!taskName) { taskName = "Default Name"};
+        if (!taskName) { 
+            taskName = "Default Name";
+            command.parameters.taskName = taskName; 
+        };
         let priority = command.parameters.priority;
         let dueDate = command.parameters.dueDate;
         let description = command.parameters.description;
-        if (!description) { description = "Default Description"};
+        if (!description) { 
+            description = "Default Description";
+            command.parameters.description = description; 
+        };
         const todo = this.todoFactory(taskName, priority, dueDate, description);
         const index = project.listItems.findIndex(todo => todo.id > command.parameters.id );
         // Check if there is an ID (undo operation), if not then assign ID
