@@ -2,9 +2,9 @@ import controller from "./controller.js";
 import commandFactory from "./command.js";
 
 // Constructor for Project objects
-const projectFactory = (id, projectName, colorTag) => {
+const projectFactory = (id, projName, color) => {
     const listItems = [];
-    return { id, listItems, projectName, colorTag }
+    return { id, listItems, projName, color}
 }
 
 // Holds every project item
@@ -19,7 +19,7 @@ const model = {
     // ID counter (replace with UUID later?)
     idCounter: 1,
     // ID counter for project items
-    projIdCounter: 2,
+    projIdCounter: 1,
 
     // Constructor for List objects
     todoFactory(taskName, priority, dueDate, description) {
@@ -66,17 +66,33 @@ const model = {
         } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
         }
+        console.log(this.commandQueue);
+        console.log(projectHolder);
     },
     
     // Create project
     createProject(command) {
         let projName = command.parameters.projName;
         let color = command.parameters.color;
-        const project = projectFactory(this.projIdCounter, projName, color);
-        projectHolder.push(project);
-        this.projIdCounter++;
-        command.parameters.id = project.id;
-        command.parameters.projName = project.projectName;
+        let id;
+        // Check if there is an ID (undo operation), if not then assign ID
+        if (command.parameters.id) {
+            command.commandType = "createProj";
+            id = command.parameters.id;
+            const index = projectHolder.findIndex(project => project.id > command.parameters.id );
+            if (projectHolder[index]) {
+                command.parameters.indexID = projectHolder[index].id;
+            } else {
+                command.parameters.indexID = undefined;
+            }
+            const project = projectFactory(id, projName, color);
+            projectHolder.splice(index, 0, project);
+        } else {
+            const project = projectFactory(this.projIdCounter, projName, color);
+            id = this.projIdCounter++;
+            projectHolder.push(project);
+        }
+        command.parameters.id = id;
         controller.handleViewCommand(command);
     },
 
@@ -105,9 +121,8 @@ const model = {
         if (index > -1) { 
             // But not before copying the project info to allow reversal later...
             const project = (projectHolder.splice(index, 1))[0];
-            for (const property in project) {
-                command.parameters[property] = project[property];
-            }
+            command.parameters.color = project.color;
+            command.parameters.projName = project.projName;
         }
         // Sends a command for deleting the DOM element visually
         controller.handleViewCommand(command);
@@ -198,6 +213,12 @@ const model = {
             }
             else if (command.commandType === "update") {
                 this.updateTodo(this.currentProject, command);
+            }
+            else if (command.commandType === "createProj") {
+                this.deleteProject(command);
+            }
+            else if (command.commandType === "deleteProj") {
+                this.createProject(command);
             }
             else if (command.commandType === "readProj") {
                 this.readProject(command);

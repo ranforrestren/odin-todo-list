@@ -32,8 +32,8 @@ const view = {
         let priority = command.parameters.priority;
         let dueDate = command.parameters.dueDate;
         let description = command.parameters.description;
+        let indexID = command.parameters.indexID;
         if (command.commandType === "create") {
-            let indexID = command.parameters.indexID;
             this.createTodo(id, taskName, priority, dueDate, description, indexID);
         }
         if (command.commandType === "update") {
@@ -43,7 +43,7 @@ const view = {
             this.deleteTodo(id);
         }
         if (command.commandType === "createProj") {
-            this.createProject(id, projName, color);
+            this.createProject(id, projName, color, indexID);
         }
         if (command.commandType === "readProj") {
             this.readProject(id);
@@ -55,7 +55,7 @@ const view = {
     },
 
     // Creates project item
-    createProject(id, name, color) {
+    createProject(id, name, color, indexID = undefined) {
         // Create project elements
         const projElement = document.createElement('div');
         projElement.classList.add('projectItem', 'createAnimation');
@@ -79,9 +79,16 @@ const view = {
         // Injects data to todo elements
         projName.textContent = name;
         projDeleteButton.textContent = 'X';
+        // Adds project to the DOM
         // Adds todo to the DOM
         projElement.append(projColorTag, projName, projDeleteButton);
-        projBar.insertBefore(projElement, createProjectButton);
+        if (indexID) {
+            // Undo operation
+            const afterNode = projBar.querySelector(`[data-id="${indexID}"`);
+            projBar.insertBefore(projElement, afterNode);
+        } else {
+            projBar.insertBefore(projElement, createProjectButton);
+        }
     },
 
     // Reads project item
