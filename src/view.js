@@ -23,8 +23,10 @@ const currentDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)
 const view = {
     // Handles commands
     handleCommand(command) {
+        let id = command.parameters.id;
+        console.log("COMMAND IS:");
+        console.log(command);
         if (command.commandType === "create") {
-            let id = command.parameters.id;
             let taskName = command.parameters.taskName;
             let priority = command.parameters.priority;
             let dueDate = command.parameters.dueDate;
@@ -36,7 +38,7 @@ const view = {
             console.log("UPDATE COMMAND");
         }
         if (command.commandType === "delete") {
-            console.log("DELETE COMMAND");
+            this.deleteTodo(id);
         }
     },
 
@@ -62,6 +64,8 @@ const view = {
         todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
         // Adds event handler for opening todo
         todoElement.addEventListener('click', this.readTodoClickEvent);
+        // Adds event handler for when animation ends
+        todoElement.addEventListener('animationend', this.animationEndEvent);
         // Sets correct priority data attribute
         todoPriority.setAttribute("data-priority", priority);
         // Injects data to todo elements
@@ -78,6 +82,14 @@ const view = {
         } else {
         root.appendChild(todoElement);
         }
+    },
+
+    // Deletes todo item
+    deleteTodo(id) {
+        // Finds todo element to delete
+        const todoElement = root.querySelector(`[data-id="${id}"`);
+        // Attaches delete animation
+        todoElement.classList.add('deleteAnimation');
     },
 
     // Updates entire todo list
@@ -175,6 +187,15 @@ const view = {
         const parameters = {id: id};
         const command = commandFactory("delete", parameters);
         controller.handleModelCommand(command);
+    },
+
+    // Event for when an animation ends
+    animationEndEvent(e) {
+        if (e.animationName === "zoomCreate") {
+            e.currentTarget.classList.remove("createAnimation");
+        } else if (e.animationName === "zoomDelete") {
+            e.currentTarget.remove();
+        }
     },
 
     // Event for when undo event is fired

@@ -48,6 +48,7 @@ const model = {
             this.commandQueue.push(command);
         }
         console.log(defaultProject.listItems);
+        console.log(this.commandQueue);
     },
 
     // Create todo
@@ -111,6 +112,7 @@ const model = {
 
     // Delete todo
     deleteTodo(project = defaultProject, command) {
+        command.commandType = "delete";
         // Finds todo with correct index and deletes it
         const index = project.listItems.findIndex(todo => todo.id == command.parameters.id);
         if (index > -1) { 
@@ -120,8 +122,8 @@ const model = {
                 command.parameters[property] = todo[property];
             }
         }
-        // Sends request to refresh todo list
-        controller.refreshViewTodosReq(defaultProject);
+        // Sends request to refresh todo list\
+        controller.handleViewCommand(command);
     },
 
     // Undoes last command
@@ -130,10 +132,10 @@ const model = {
             if (command.commandType === "create") {
                 this.deleteTodo(undefined, command);
             }
-            if (command.commandType === "delete") {
+            else if (command.commandType === "delete") {
                 this.createTodo(undefined, command);
             }
-            if (command.commandType === "update") {
+            else if (command.commandType === "update") {
                 this.updateTodo(undefined, command);
             }
         } else {
