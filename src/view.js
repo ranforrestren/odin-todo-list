@@ -49,6 +49,9 @@ const view = {
             this.readProject(id);
             todoBar.replaceChildren();
         }
+        if (command.commandType === "deleteProj") {
+            this.deleteProject(id);
+        }
     },
 
     // Creates project item
@@ -66,9 +69,7 @@ const view = {
         projElement.setAttribute('data-id', id);
         projDeleteButton.setAttribute('data-id', id);
         // Adds event handler for deleting proj
-
-        //todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
-
+        projDeleteButton.addEventListener('click', this.deleteProjClickEvent);
         // Adds event handler for opening proj
         projElement.addEventListener('click', this.readProjClickEvent);
         // Adds event handler for when animation ends
@@ -89,6 +90,15 @@ const view = {
         const projElement = projBar.querySelector(`[data-id="${id}"`);
         // Adds update animation
         projElement.classList.add('updateAnimation');
+    },
+
+    // Delete project item
+    deleteProject(id) {
+        // Finds todo element to delete
+        const projectElement = projBar.querySelector(`[data-id="${id}"`);
+        // Attaches delete animation
+        projectElement.classList.add('deleteAnimation');
+        projectElement.classList.remove("updatePlayable");
     },
 
     // Creates todo item
@@ -207,7 +217,7 @@ const view = {
     // Event for when create proj event is fired
     createProjectClickEvent() {
         // Create and pass "create" command
-        const parameters = {projName:"New Project", color:""};
+        const parameters = { projName: "New Project", color: "" };
         const command = commandFactory("createProj", parameters);
         controller.handleModelCommand(command);
     },
@@ -223,6 +233,16 @@ const view = {
             const command = commandFactory("readProj", parameters);
             controller.handleModelCommand(command);
         }
+    },
+
+    // Event for when delete proj event is fired
+    deleteProjClickEvent(e) {
+        e.stopPropagation();
+        // Create and pass "delete" command
+        const id = e.currentTarget.dataset.id;
+        const parameters = { id: id };
+        const command = commandFactory("deleteProj", parameters);
+        controller.handleModelCommand(command);
     },
 
     // Event for when create todo event is fired

@@ -56,6 +56,10 @@ const model = {
         if (command.commandType === "readProj") {
             this.readProject(command);
         }
+        if (command.commandType === "deleteProj") {
+            console.log(projectHolder);
+            this.deleteProject(command);
+        }
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
             this.undoCommand(lastCommand);
@@ -91,6 +95,22 @@ const model = {
         }
         command.parameters.id = this.currentProject.id;
         this.currentProject = project;
+    },
+
+    // Delete project
+    deleteProject(command) {
+        command.commandType = "deleteProj";
+        // Finds project with correct index and deletes it
+        const index = projectHolder.findIndex(project => project.id == command.parameters.id);
+        if (index > -1) { 
+            // But not before copying the project info to allow reversal later...
+            const project = (projectHolder.splice(index, 1))[0];
+            for (const property in project) {
+                command.parameters[property] = project[property];
+            }
+        }
+        // Sends a command for deleting the DOM element visually
+        controller.handleViewCommand(command);
     },
 
     // Create todo
