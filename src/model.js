@@ -1,23 +1,33 @@
 import controller from "./controller.js";
+import commandFactory from "./command.js";
 
 // Constructor for Project objects
-const projectFactory = (projectName, colorTag) => {
+const projectFactory = (id, projectName, colorTag) => {
     const listItems = [];
-    return { listItems, projectName, colorTag }
+    return { id, listItems, projectName, colorTag }
 }
 
+// Holds every project item
+const projectHolder = [];
+
 // Default project object
-const defaultProject = projectFactory('default', 'white');
+const defaultProject = projectFactory(1, 'default', 'white');
+projectHolder.push(projectHolder);
 
 // MODEL CONTROLLER
 const model = {
     // ID counter (replace with UUID later?)
     idCounter: 1,
+    // ID counter for project items
+    projIdCounter: 2,
 
     // Constructor for List objects
     todoFactory(taskName, priority, dueDate, description) {
         return { taskName, priority, dueDate, description };
     },
+
+    // Reference to currently active project
+    currentProject: defaultProject,
 
     // Que for holding previous done commands
     commandQueue: [],
@@ -25,20 +35,26 @@ const model = {
     // Handles commands
     handleCommand(command) {
         if (command.commandType === "create") {
-            this.createTodo(undefined, command);
+            this.createTodo(this.currentProject, command);
             controller.closeModalReq();
         }
         if (command.commandType === "read") {
-            const todo = this.readTodo(undefined, command);
+            const todo = this.readTodo(this.currentProject, command);
             controller.addDataModalReq(todo);
             controller.setModalMode("update", command.parameters.id);
         }
         if (command.commandType === "update") {
-            this.updateTodo(undefined, command);
+            this.updateTodo(this.currentProject, command);
             controller.closeModalReq();
         }
         if (command.commandType === "delete") {
-            this.deleteTodo(undefined, command);
+            this.deleteTodo(this.currentProject, command);
+        }
+        if (command.commandType === "createProj") {
+            this.createProject(command);
+        }
+        if (command.commandType === "readProj") {
+            this.readProject(command);
         }
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
@@ -46,6 +62,39 @@ const model = {
         } else if (command.commandType !== "read") {
             this.commandQueue.push(command);
         }
+    },
+    
+    // Create project
+    createProject(command) {
+        let projName = command.parameters.projName;
+        const project = projectFactory(this.projIdCounter, projName, "white");
+        projectHolder.push(project);
+        this.projIdCounter++;
+        command.parameters.id = project.id;
+        command.parameters.projName = project.projectName;
+        command.parameters.color = project.colorTag;
+        controller.handleViewCommand(command);
+        console.log(project);
+    },
+
+    // Read (change) project
+    readProject(command) {
+        const project = projectHolder.find(project => project.id == command.parameters.id);
+        console.log(project);
+        controller.handleViewCommand(command);
+        for (const todo of project.listItems) {
+            console.log(todo);
+            const id = todo.id;
+            const taskName = todo.taskName;
+            const priority = todo.priority;
+            const dueDate = todo.dueDate;
+            const description = todo.description;
+            const command = commandFactory("create", {id, taskName, priority, dueDate, description});
+            controller.handleViewCommand(command);
+            console.log("TESTED!");
+        }
+        command.parameters.id = this.currentProject.id;
+        this.currentProject = project;
     },
 
     // Create todo
@@ -56,7 +105,7 @@ const model = {
         let dueDate = command.parameters.dueDate;
         let description = command.parameters.description;
         if (!description) { description = "Default Description"};
-        const todo = model.todoFactory(taskName, priority, dueDate, description);
+        const todo = this.todoFactory(taskName, priority, dueDate, description);
         const index = project.listItems.findIndex(todo => todo.id > command.parameters.id );
         // Check if there is an ID (undo operation), if not then assign ID
         if (command.parameters.id) {
@@ -126,13 +175,16 @@ const model = {
     undoCommand(command) {
         if (command) {
             if (command.commandType === "create") {
-                this.deleteTodo(undefined, command);
+                this.deleteTodo(this.currentProject, command);
             }
             else if (command.commandType === "delete") {
-                this.createTodo(undefined, command);
+                this.createTodo(this.currentProject, command);
             }
             else if (command.commandType === "update") {
-                this.updateTodo(undefined, command);
+                this.updateTodo(this.currentProject, command);
+            }
+            else if (command.commandType === "readProj") {
+                this.readProject(command);
             }
         } else {
         alert("THERE ARE NO COMMANDS TO UNDO");

@@ -5,6 +5,19 @@ import commandFactory from './command.js';
 const date = new Date();
 const currentDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
 
+const command1 = commandFactory("createProj", {projName:"Test 1"});
+const command2 = commandFactory("createProj", {projName:"Test 2"});
+const command3 = commandFactory("createProj", {projName:"Test 3"});
+const command4 = commandFactory("createProj", {projName:"Test 4"});
+
+model.createProject(command1);
+model.createProject(command2);
+model.createProject(command3);
+model.createProject(command4);
+
+const command5 = commandFactory("readProj", {id: 2});
+model.readProject(command5);
+
 model.handleCommand( commandFactory("create", {taskName:"Test1", priority:"High", dueDate:currentDate, description:"Test Description 1"}));
 model.handleCommand( commandFactory("create", {taskName:"Really Really Really Long Name Test", priority:"Default", dueDate:currentDate, description:"Really Really Really Really Really Really Long Description Test"}));
 model.handleCommand( commandFactory("create", {taskName:"Test3", priority:"Default", dueDate:currentDate, description:"Test Description 3"}));

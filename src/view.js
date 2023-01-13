@@ -2,7 +2,8 @@ import controller from './controller.js';
 import commandFactory from './command.js';
 
 // DOM Element Setup
-const root = document.querySelector('#todoBar');
+const projBar = document.querySelector('#projectBar');
+const todoBar = document.querySelector('#todoBar');
 const overlay = document.querySelector('.overlay');
 const modal = document.querySelector('.modal');
 
@@ -24,6 +25,8 @@ const view = {
     // Handles commands
     handleCommand(command) {
         let id = command.parameters.id;
+        let projName = command.parameters.projName;
+        let color = command.parameters.color;
         let taskName = command.parameters.taskName;
         let priority = command.parameters.priority;
         let dueDate = command.parameters.dueDate;
@@ -38,6 +41,46 @@ const view = {
         if (command.commandType === "delete") {
             this.deleteTodo(id);
         }
+        if (command.commandType === "createProj") {
+            this.createProject(id, projName, color);
+        }
+        if (command.commandType === "readProj") {
+            todoBar.replaceChildren();
+        }
+    },
+
+    // Creates project item
+    createProject(id, name, color) {
+        // Create project elements
+        const projElement = document.createElement('div');
+        projElement.classList.add('projectItem', 'createAnimation');
+        const projColorTag = document.createElement('div');
+        projColorTag.classList.add('colorTag');
+        const projName = document.createElement('p');
+        projName.classList.add('name');
+        const projDeleteButton = document.createElement('button');
+        projDeleteButton.classList.add('button', 'delete');
+        // Add id data-attribute to elements
+        projElement.setAttribute('data-id', id);
+        projDeleteButton.setAttribute('data-id', id);
+        // Adds event handler for deleting proj
+
+        //todoDeleteButton.addEventListener('click', this.deleteTodoClickEvent);
+
+        // Adds event handler for opening proj
+
+        projElement.addEventListener('click', this.readProjClickEvent);
+
+        // Adds event handler for when animation ends
+        projElement.addEventListener('animationend', this.animationEndEvent);
+        // Sets correct color tag data attribute
+        projColorTag.setAttribute("data-color", color);
+        // Injects data to todo elements
+        projName.textContent = name;
+        projDeleteButton.textContent = 'X';
+        // Adds todo to the DOM
+        projElement.append(projColorTag, projName, projDeleteButton);
+        projBar.appendChild(projElement);
     },
 
     // Creates todo item
@@ -75,17 +118,17 @@ const view = {
         todoElement.append(todoPriority, todoName, todoDueDate, todoDescription, todoDeleteButton);
         if (indexID) {
             // Undo operation
-            const afterNode = root.querySelector(`[data-id="${indexID}"`);
-            root.insertBefore(todoElement, afterNode);
+            const afterNode = todoBar.querySelector(`[data-id="${indexID}"`);
+            todoBar.insertBefore(todoElement, afterNode);
         } else {
-            root.appendChild(todoElement);
+            todoBar.appendChild(todoElement);
         }
     },
 
     // Updates todo item
     updateTodo(id, taskName, priority, dueDate, description) {
         // Tags all required elements of the todo item
-        const todoElement = root.querySelector(`[data-id="${id}"`);
+        const todoElement = todoBar.querySelector(`[data-id="${id}"`);
         const todoPriority = todoElement.querySelector('.priority');
         const todoName = todoElement.querySelector('.name');
         const todoDueDate = todoElement.querySelector('.dueDate');
@@ -102,18 +145,10 @@ const view = {
     // Deletes todo item
     deleteTodo(id) {
         // Finds todo element to delete
-        const todoElement = root.querySelector(`[data-id="${id}"`);
+        const todoElement = todoBar.querySelector(`[data-id="${id}"`);
         // Attaches delete animation
         todoElement.classList.add('deleteAnimation');
         todoElement.classList.remove("updatePlayable");
-    },
-
-    // Updates entire todo list
-    displayTodos(project) {
-        root.replaceChildren();
-        project.listItems.forEach(todo => {
-            this.createTodo(todo.id, todo.taskName, todo.priority, todo.dueDate, todo.description);
-        })
     },
 
     // Populates modal with provided info
@@ -159,6 +194,19 @@ const view = {
     removeModalButtonListeners() {
         modalButton.removeEventListener('click', this.createTodoClickEvent);
         modalButton.removeEventListener('click', this.updateTodoClickEvent);
+    },
+
+    // Event for when read proj event is fired
+    readProjClickEvent(e) {
+        // Make sure text is not being selected
+        let selection = window.getSelection();
+        if (selection.type != "Range") {
+            // Create and pass "read" command
+            const id = e.currentTarget.dataset.id;
+            const parameters = { id: id };
+            const command = commandFactory("readProj", parameters);
+            controller.handleModelCommand(command);
+        }
     },
 
     // Event for when create todo event is fired
