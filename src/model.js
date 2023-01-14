@@ -83,6 +83,8 @@ const model = {
                 command.parameters.indexID = undefined;
             }
             const project = projectFactory(id, projName, color);
+            console.log(command.parameters.listItems);
+            project.listItems = command.parameters.listItems;
             projectHolder.splice(index, 0, project);
         } else {
             const project = projectFactory(this.projIdCounter, projName, color);
@@ -120,6 +122,7 @@ const model = {
             const project = (projectHolder.splice(index, 1))[0];
             command.parameters.color = project.color;
             command.parameters.projName = project.projName;
+            command.parameters.listItems = project.listItems;
         }
         // Sends a command for deleting the DOM element visually
         controller.handleViewCommand(command);
