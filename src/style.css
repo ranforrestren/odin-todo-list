@@ -60,6 +60,10 @@ body, input, textarea {
     background: rgba(180, 180, 180, 0.8);
 }
 
+.projectItem .colorTag[data-color="white"] {
+    background-color: #e2e8f0;
+}
+
 .projectItem .colorTag[data-color="red"] {
     background-color: #ef4444;
 }
@@ -238,7 +242,11 @@ body, input, textarea {
 }
 
 .button.delete {
-    background-color: #FF6E40;
+    background-color: #ef4444;
+}
+
+.button.edit {
+    background-color: #facc15;
 }
 
 .overlay {

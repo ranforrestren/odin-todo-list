@@ -40,8 +40,8 @@ const model = {
         }
         if (command.commandType === "read") {
             const todo = this.readTodo(this.currentProject, command);
-            controller.addDataModalReq(todo);
             controller.setModalMode("update", command.parameters.id);
+            controller.addTodoModalReq(todo);
         }
         if (command.commandType === "update") {
             this.updateTodo(this.currentProject, command);
@@ -53,6 +53,11 @@ const model = {
         if (command.commandType === "createProj") {
             this.createProject(command);
         }
+        if (command.commandType === "editProj") {
+            const project = this.editProject(command);
+            controller.setModalMode("updateProj", command.parameters.id);
+            controller.addProjModalReq(project);
+        }
         if (command.commandType === "readProj") {
             this.readProject(command);
         }
@@ -62,7 +67,7 @@ const model = {
         if (command.commandType === "undo") {
             const lastCommand = this.commandQueue.pop();
             this.undoCommand(lastCommand);
-        } else if (command.commandType !== "read") {
+        } else if (command.commandType !== "read" && command.commandType !== "editProj") {
             this.commandQueue.push(command);
         }
     },
@@ -83,7 +88,6 @@ const model = {
                 command.parameters.indexID = undefined;
             }
             const project = projectFactory(id, projName, color);
-            console.log(command.parameters.listItems);
             project.listItems = command.parameters.listItems;
             projectHolder.splice(index, 0, project);
         } else {
@@ -110,6 +114,11 @@ const model = {
         }
         command.parameters.id = this.currentProject.id;
         this.currentProject = project;
+    },
+
+    editProject(command) {
+        const project = projectHolder.find(project => project.id == command.parameters.id);
+        return project;
     },
 
     // Delete project

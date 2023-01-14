@@ -19,16 +19,24 @@ const controller = {
     },
 
     setModalMode(mode, id) {
-        view.setModalButtonBehavior("update", id);
+        view.setModalButtonBehavior(mode, id);
     },
 
     // Handles request to inject data into modal
-    addDataModalReq(todo) {
+    addTodoModalReq(todo) {
         let taskName = todo.taskName;
         let priority = todo.priority;
         let dueDate = todo.dueDate;
         let description = todo.description;
-        view.addDataModal(taskName, priority, dueDate, description);
+        view.addTodoModal(taskName, priority, dueDate, description);
+        view.openModal();
+    },
+
+    // Handles request to inject data into modal
+    addProjModalReq(project) {
+        let projName = project.projName;
+        let color = project.color;
+        view.addProjModal(projName, color);
         view.openModal();
     },
 

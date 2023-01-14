@@ -17,6 +17,11 @@ const openModalButton = document.querySelector('#openModalButton');
 const modalButton = document.querySelector('#modalButton');
 const undoButton = document.querySelector('#undoButton');
 
+// Modal elements
+const modalSelect = document.querySelector('#taskPriority');
+const modalDueDate = document.querySelector('#dueDate');
+const modalDescription = document.querySelector('#description');
+
 // Setup default date for inputs (Can move into own function in refactor?)
 const date = new Date();
 const currentDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
@@ -97,6 +102,19 @@ const view = {
         const projElement = projBar.querySelector(`[data-id="${id}"`);
         // Adds update animation
         projElement.classList.add('updateAnimation');
+        // Changes delete button into edit button
+        const prevDeleteButton = projBar.querySelector('.edit');
+        if (prevDeleteButton !== null) {
+            prevDeleteButton.classList.remove('edit');
+            prevDeleteButton.textContent = "X";
+            prevDeleteButton.removeEventListener('click', this.editProjClickEvent);
+            prevDeleteButton.addEventListener('click', this.deleteProjClickEvent);
+        }
+        const projDeleteButton = projElement.querySelector('.delete');
+        projDeleteButton.textContent = "✎";
+        projDeleteButton.classList.add('edit');
+        projDeleteButton.removeEventListener('click', this.deleteProjClickEvent);
+        projDeleteButton.addEventListener('click', this.editProjClickEvent);
     },
 
     // Delete project item
@@ -177,11 +195,18 @@ const view = {
     },
 
     // Populates modal with provided info
-    addDataModal(taskName = "", priority = "Default", dueDate = currentDate, description = "") {
+    addTodoModal(taskName = "", priority = "Default", dueDate = currentDate, description = "") {
         taskNameInput.value = taskName;
         priorityInput.value = priority;
         dueDateInput.value = currentDate;
         descriptionInput.value = description;
+    },
+
+    // Populates modal with provided info
+    addProjModal(project = "", color = "") {
+        taskNameInput.value = project;
+        console.log(color);
+        priorityInput.value = color;
     },
 
     // Opens modal
@@ -193,7 +218,7 @@ const view = {
     // Close modal
     closeModal() {
         // Resets inputs in modal
-        this.addDataModal();
+        this.addTodoModal();
         // Hides modal
         overlay.classList.add('hidden');
         modal.classList.add('hidden');
@@ -201,30 +226,71 @@ const view = {
 
     // Sets behavior modal button to add / edit
     setModalButtonBehavior(mode, id) {
+        modalDueDate.classList.remove("hidden");
+        modalDescription.classList.remove("hidden");
         this.removeModalButtonListeners();
         if (mode === "create") {
             modalButton.setAttribute("data-mode", "create");
             modalButton.textContent = "Create";
             modalButton.addEventListener('click', this.createTodoClickEvent);
+            this.setPrioSelectMode("todo");
         }
         else if (mode === "update") {
             modalButton.setAttribute("data-mode", "update");
             modalButton.textContent = "Update";
             modalButton.setAttribute('data-id', id);
             modalButton.addEventListener('click', this.updateTodoClickEvent);
+            this.setPrioSelectMode("todo");
         }
+        else if (mode === "updateProj") {
+            modalDueDate.classList.add("hidden");
+            modalDescription.classList.add("hidden");
+            this.setPrioSelectMode("project");
+        }
+    },
+
+    // Set priority select mode
+    setPrioSelectMode(mode) {
+        if (mode === "todo") {
+            const high = this.createOption("High");
+            const medium = this.createOption("Medium");
+            const low = this.createOption("Low");
+            const defaultval = this.createOption("Default");
+            modalSelect.replaceChildren(high, medium, low, defaultval);
+        }
+        else if (mode === "project") {
+            const white = this.createOption("white");
+            const red = this.createOption("red");
+            const orange = this.createOption("orange");
+            const yellow = this.createOption("yellow");
+            const green = this.createOption("green");
+            const cyan = this.createOption("cyan");
+            const blue = this.createOption("blue");
+            const purple = this.createOption("purple");
+            const pink = this.createOption("pink");
+            modalSelect.replaceChildren(white, red, orange, yellow, green, cyan, blue, purple, pink);
+        }
+    },
+
+    createOption(value) {
+        const optionElement = document.createElement('option');
+        optionElement.classList.add('selectOpt');
+        optionElement.value = value;
+        optionElement.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+        return optionElement;
     },
 
     // Removes modal button listeners
     removeModalButtonListeners() {
         modalButton.removeEventListener('click', this.createTodoClickEvent);
         modalButton.removeEventListener('click', this.updateTodoClickEvent);
+        //modalButton.remmoveEventListener('click', this.updateProjClickEvent);
     },
 
     // Event for when create proj event is fired
     createProjectClickEvent() {
         // Create and pass "create" command
-        const parameters = { projName: "New Project", color: "" };
+        const parameters = { projName: "New Project", color: "white" };
         const command = commandFactory("createProj", parameters);
         controller.handleModelCommand(command);
     },
@@ -240,6 +306,16 @@ const view = {
             const command = commandFactory("readProj", parameters);
             controller.handleModelCommand(command);
         }
+    },
+
+    // Event for when update proj event is fired
+    editProjClickEvent(e) {
+        e.stopPropagation();
+        // Create and pass "edit" command (actually opens Modal)
+        const id = e.currentTarget.dataset.id;
+        const parameters = { id: id };
+        const command = commandFactory("editProj", parameters);
+        controller.handleModelCommand(command);
     },
 
     // Event for when delete proj event is fired
