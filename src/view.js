@@ -54,6 +54,9 @@ const view = {
             this.readProject(id);
             todoBar.replaceChildren();
         }
+        if (command.commandType === "updateProj") {
+            this.updateProject(id, projName, color);
+        }
         if (command.commandType === "deleteProj") {
             this.deleteProject(id);
         }
@@ -115,6 +118,19 @@ const view = {
         projDeleteButton.classList.add('edit');
         projDeleteButton.removeEventListener('click', this.deleteProjClickEvent);
         projDeleteButton.addEventListener('click', this.editProjClickEvent);
+    },
+
+    // Updates project item
+    updateProject(id, projName, color) {
+        // Tags all required elements of the todo item
+        const projElement = projBar.querySelector(`[data-id="${id}"`);
+        const projColor = projElement.querySelector('.colorTag');
+        const name = projElement.querySelector('.name');
+        // Injects new values to elements
+        projColor.setAttribute("data-color", color);
+        name.textContent = projName;
+        // Adds update animation
+        projElement.classList.add('updateAnimation');
     },
 
     // Delete project item
@@ -232,20 +248,24 @@ const view = {
         if (mode === "create") {
             modalButton.setAttribute("data-mode", "create");
             modalButton.textContent = "Create";
-            modalButton.addEventListener('click', this.createTodoClickEvent);
             this.setPrioSelectMode("todo");
+            modalButton.addEventListener('click', this.createTodoClickEvent);
         }
         else if (mode === "update") {
             modalButton.setAttribute("data-mode", "update");
             modalButton.textContent = "Update";
             modalButton.setAttribute('data-id', id);
-            modalButton.addEventListener('click', this.updateTodoClickEvent);
             this.setPrioSelectMode("todo");
+            modalButton.addEventListener('click', this.updateTodoClickEvent);
         }
         else if (mode === "updateProj") {
             modalDueDate.classList.add("hidden");
             modalDescription.classList.add("hidden");
+            modalButton.setAttribute("data-mode", "updateProj");
+            modalButton.textContent = "Update";
+            modalButton.setAttribute('data-id', id);
             this.setPrioSelectMode("project");
+            modalButton.addEventListener('click', this.updateProjClickEvent);
         }
     },
 
@@ -316,6 +336,19 @@ const view = {
         const parameters = { id: id };
         const command = commandFactory("editProj", parameters);
         controller.handleModelCommand(command);
+    },
+
+    // Event for when update proj event is fired
+    updateProjClickEvent(e) {
+        const id = e.currentTarget.dataset.id;
+        const projName = document.getElementById('taskName').value;
+        const color = document.getElementById('taskPriority').value;
+        // Create and pass "create" command
+        const parameters = { id: id, projName: projName, color: color };
+        const command = commandFactory("updateProj", parameters);
+        controller.handleModelCommand(command);
+        console.log("FIRED");
+        console.log(command);
     },
 
     // Event for when delete proj event is fired

@@ -53,13 +53,17 @@ const model = {
         if (command.commandType === "createProj") {
             this.createProject(command);
         }
+        if (command.commandType === "readProj") {
+            this.readProject(command);
+        }
         if (command.commandType === "editProj") {
             const project = this.editProject(command);
             controller.setModalMode("updateProj", command.parameters.id);
             controller.addProjModalReq(project);
         }
-        if (command.commandType === "readProj") {
-            this.readProject(command);
+        if (command.commandType === "updateProj") {
+            this.updateProject(command);
+            controller.closeModalReq();
         }
         if (command.commandType === "deleteProj") {
             this.deleteProject(command);
@@ -119,6 +123,23 @@ const model = {
     editProject(command) {
         const project = projectHolder.find(project => project.id == command.parameters.id);
         return project;
+    },
+
+    // Update todo
+    updateProject(command) {
+        console.log(command);
+        // Finds proj with correct id
+        const project = projectHolder.find(project => project.id == command.parameters.id);
+        // Saves info to allow reversal later
+        const oldProj = { projName: project.projName, color: project.color};
+        // Edits values
+        if (command.parameters.projName != undefined) { project.projName = command.parameters.projName }
+        if (command.parameters.color != undefined) { project.color = command.parameters.color }
+        // Sends a command for updating the DOM element visually
+        controller.handleViewCommand(command);
+        // Reinjects info into command to allow reversal
+        command.parameters.projName = oldProj.projName;
+        command.parameters.color = oldProj.color;
     },
 
     // Delete project
@@ -231,6 +252,9 @@ const model = {
             }
             else if (command.commandType === "createProj") {
                 this.deleteProject(command);
+            }
+            else if (command.commandType === "updateProj") {
+                this.updateProject(command);
             }
             else if (command.commandType === "deleteProj") {
                 this.createProject(command);
