@@ -8,11 +8,10 @@ const projectFactory = (id, projName, color) => {
 }
 
 // Holds every project item
-const projectHolder = [];
+let projectHolder = [];
 
 // Default project object
 const defaultProject = projectFactory(1, 'default', 'white');
-projectHolder.push(projectHolder);
 
 // MODEL CONTROLLER
 const model = {
@@ -73,6 +72,37 @@ const model = {
             this.undoCommand(lastCommand);
         } else if (command.commandType !== "read" && command.commandType !== "editProj") {
             this.commandQueue.push(command);
+        }
+        this.updateStorage();
+    },
+
+    // Updates local storage
+    updateStorage() {
+        localStorage.setItem('projectHolder', JSON.stringify(projectHolder));
+        localStorage.setItem('idCounter', JSON.stringify(this.idCounter));
+        localStorage.setItem('projIdCounter', JSON.stringify(this.projIdCounter));
+        localStorage.setItem('commandQueue', JSON.stringify(this.commandQueue));
+        const projectHolderCopy = JSON.parse(localStorage.getItem('projectHolder'));
+        console.log("PROJECT HOLDER COPY IS:");
+        console.log(projectHolderCopy);
+    },
+
+    // Load date from storage
+    loadStorage() {
+        // If there is data to load from storage
+        if (JSON.parse(localStorage.getItem('projectHolder') !== null)) {
+            // Loads in list of projects
+            projectHolder = JSON.parse(localStorage.getItem('projectHolder'));
+            for (const project of projectHolder) {
+                const parameters = { id: project.id, projName: project.projName, color: project.color };
+                const command = commandFactory("createProj", parameters);
+                controller.handleViewCommand(command);
+            }
+            // Loads in correct ID counters
+            this.idCounter = JSON.parse(localStorage.getItem('idCounter'));
+            this.projIdCounter = JSON.parse(localStorage.getItem('projIdCounter'));
+            // Loads in command queue
+            this.commandQueue = JSON.parse(localStorage.getItem('commandQueue'));
         }
     },
     
@@ -269,6 +299,5 @@ const model = {
 }
 
 export {
-    model,
-    defaultProject
+    model
 }

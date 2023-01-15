@@ -5,6 +5,9 @@ import commandFactory from './command.js';
 const date = new Date();
 const currentDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
 
+model.loadStorage();
+
+/*
 const command1 = commandFactory("createProj", {projName:"Project 1", color:"red"});
 const command2 = commandFactory("createProj", {projName:"Project 2", color:"orange"});
 const command3 = commandFactory("createProj", {projName:"Project 3", color:"yellow"});
@@ -89,3 +92,4 @@ model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDa
 model.handleCommand( commandFactory("create", {priority:"Low", dueDate:currentDate}));
 
 model.handleCommand(command9);
+*/
