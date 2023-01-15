@@ -36,7 +36,7 @@
                 <option class="selectOpt" value="High">High</option>
                 <option class="selectOpt" value="Medium">Medium</option>
                 <option class="selectOpt" value="Low">Low</option>
-                <option class="selectOpt" value="Default">Default</option>
+                <option class="selectOpt" value="None">None</option>
             </select>
             <input type="date" id="dueDate" class="dateInput input" name="dueDate" value="2023-01-01">
             <textarea id="description" class="input" name="description" rows="8"
@@ -44,6 +44,12 @@
             <button id="modalButton" class="button small" type="button"></button>
         </form>
     </div>
+    <fieldset id="devButtons">
+        <legend>developer tools</legend>
+        <button id="clearStorage" type="button">clear local storage</button>
+        <button id="clearCurrent" type="button">clear current data</button>
+        <button id="loadDefault" type="button">load default dataset</button>
+    </fieldset>
 </body>
 
 </html>

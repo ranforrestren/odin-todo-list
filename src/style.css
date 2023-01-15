@@ -308,6 +308,15 @@ body, input, textarea {
     width: 10px;
 }
 
+#devButtons {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    bottom: 20px;
+    right: 20px;
+    color: white;
+}
+
 ::-webkit-scrollbar {
     width: 20px;
 }

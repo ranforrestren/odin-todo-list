@@ -211,7 +211,7 @@ const view = {
     },
 
     // Populates modal with provided info
-    addTodoModal(taskName = "", priority = "Default", dueDate = currentDate, description = "") {
+    addTodoModal(taskName = "", priority = "None", dueDate = currentDate, description = "") {
         taskNameInput.value = taskName;
         priorityInput.value = priority;
         dueDateInput.value = currentDate;
@@ -221,7 +221,6 @@ const view = {
     // Populates modal with provided info
     addProjModal(project = "", color = "") {
         taskNameInput.value = project;
-        console.log(color);
         priorityInput.value = color;
     },
 
@@ -275,7 +274,7 @@ const view = {
             const high = this.createOption("High");
             const medium = this.createOption("Medium");
             const low = this.createOption("Low");
-            const defaultval = this.createOption("Default");
+            const defaultval = this.createOption("None");
             modalSelect.replaceChildren(high, medium, low, defaultval);
         }
         else if (mode === "project") {
@@ -347,8 +346,6 @@ const view = {
         const parameters = { id: id, projName: projName, color: color };
         const command = commandFactory("updateProj", parameters);
         controller.handleModelCommand(command);
-        console.log("FIRED");
-        console.log(command);
     },
 
     // Event for when delete proj event is fired
@@ -440,6 +437,12 @@ const view = {
             controller.handleCloseModalClick();
         }
     },
+
+    // clears all data
+    clearData() {
+        projBar.replaceChildren(createProjectButton);
+        todoBar.replaceChildren();
+    }
 }
 
 // Setup event listeners

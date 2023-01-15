@@ -82,9 +82,7 @@ const model = {
         localStorage.setItem('idCounter', JSON.stringify(this.idCounter));
         localStorage.setItem('projIdCounter', JSON.stringify(this.projIdCounter));
         localStorage.setItem('commandQueue', JSON.stringify(this.commandQueue));
-        const projectHolderCopy = JSON.parse(localStorage.getItem('projectHolder'));
-        console.log("PROJECT HOLDER COPY IS:");
-        console.log(projectHolderCopy);
+        localStorage.setItem('currentProject', JSON.stringify(this.currentProject.id));
     },
 
     // Load date from storage
@@ -103,9 +101,26 @@ const model = {
             this.projIdCounter = JSON.parse(localStorage.getItem('projIdCounter'));
             // Loads in command queue
             this.commandQueue = JSON.parse(localStorage.getItem('commandQueue'));
+            // Opens selected project
+            let projectID = JSON.parse(localStorage.getItem('currentProject'));
+            const selectProj = commandFactory("readProj", {id: projectID});
+            model.readProject(selectProj);
+            return true;
+        }
+        else {
+            return false;
         }
     },
-    
+
+    // Clears data
+    clearData() {
+        projectHolder = [];
+        this.idCounter = 1;
+        this.projIdCounter = 1;
+        this.commandQueue = [];
+        this.currentProject = defaultProject;
+    },
+
     // Create project
     createProject(command) {
         let projName = command.parameters.projName;
@@ -157,7 +172,6 @@ const model = {
 
     // Update todo
     updateProject(command) {
-        console.log(command);
         // Finds proj with correct id
         const project = projectHolder.find(project => project.id == command.parameters.id);
         // Saves info to allow reversal later
